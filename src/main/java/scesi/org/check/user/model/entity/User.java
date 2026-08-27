@@ -1,11 +1,11 @@
-package scesi.org.check.crud_miembros;
+package scesi.org.check.user.model.entity;
 import lombok.Data;
 import jakarta.persistence.*;
 
 @Data
 @Entity
 @Table(name = "users")
-public class Miembro {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;

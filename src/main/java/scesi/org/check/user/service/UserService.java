@@ -1,31 +1,34 @@
-package scesi.org.check.crud_miembros;
+package scesi.org.check.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import scesi.org.check.user.model.entity.User;
+import scesi.org.check.user.model.repository.IUserRepository;
+
 import java.util.Optional;
 
 @Service
-public class MiembrosService {
+public class UserService {
 
     @Autowired
-    private IMiembroRepository imiembroRepository;
+    private IUserRepository imiembroRepository;
 
-    public Miembro saveMiembro(Miembro miembro) {
-        if(miembro.getId() == null) {
-            return imiembroRepository.save(miembro);
+    public User saveMiembro(User user) {
+        if(user.getId() == null) {
+            return imiembroRepository.save(user);
         }
         return null;
     }
 
-    public Optional<Miembro> getMiembroById(int id) {
+    public Optional<User> getMiembroById(int id) {
         return imiembroRepository.findById(id);
     }
 
-    public Miembro editMiembro(Miembro miembro) {
-        if(miembro.getId() != null && imiembroRepository.existsById(miembro.getId())) {
-            return imiembroRepository.save(miembro);
+    public User editMiembro(User user) {
+        if(user.getId() != null && imiembroRepository.existsById(user.getId())) {
+            return imiembroRepository.save(user);
         }
         return null;
     }
