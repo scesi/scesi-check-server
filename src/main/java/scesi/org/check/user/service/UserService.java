@@ -1,9 +1,6 @@
 package scesi.org.check.user.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import scesi.org.check.user.model.entity.User;
 import scesi.org.check.user.model.repository.IUserRepository;
 
@@ -13,32 +10,32 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
-    private IUserRepository imiembroRepository;
+    private IUserRepository iUserRepository;
 
-    public User saveMiembro(User user) {
+    public User saveUser(User user) {
         if(user.getId() == null) {
-            return imiembroRepository.save(user);
+            return iUserRepository.save(user);
         }
         return null;
     }
 
-    public Optional<User> getMiembroById(int id) {
-        return imiembroRepository.findById(id);
+    public Optional<User> getUserById(int id) {
+        return iUserRepository.findById(id);
     }
 
-    public User editMiembro(User user) {
-        if(user.getId() != null && imiembroRepository.existsById(user.getId())) {
-            return imiembroRepository.save(user);
+    public User editUser(User user) {
+        if(user.getId() != null && iUserRepository.existsById(user.getId())) {
+            return iUserRepository.save(user);
         }
         return null;
     }
 
-    public boolean deleteMiembro(int id) {
-        if (!imiembroRepository.existsById(id)) {
+    public boolean deleteUser(int id) {
+        if (!iUserRepository.existsById(id)) {
             return false;
         }
 
-        imiembroRepository.deleteById(id);
+        iUserRepository.deleteById(id);
         return true;
     }
 }
