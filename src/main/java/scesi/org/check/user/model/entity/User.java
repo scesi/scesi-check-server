@@ -1,28 +1,36 @@
 package scesi.org.check.user.model.entity;
-import lombok.Data;
+import lombok.*;
 import jakarta.persistence.*;
 
-@Data
+import java.util.List;
+
 @Entity
 @Table(name = "users")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
-    @Column(name = "nombre")
-    private String nombre;
+    @Column(nullable = false)
+    private String name;
 
-    @Column(name = "apellido")
-    private String apellido;
+    @Column(nullable = false)
+    private String lastName;
 
-    @Column(name = "cargo")
-    private String cargo;
-
-    @Column(name = "email")
+    @Column(nullable = false)
     private String email;
 
-    @Column(name = "activo")
-    private Boolean activo;
+    @Column(nullable = false)
+    private String sisCode;
+
+    @Column(nullable = false)
+    private Boolean active;
+
+    @OneToMany(mappedBy = "user")
+    private List<RolUser> rolUser;
 
 }
