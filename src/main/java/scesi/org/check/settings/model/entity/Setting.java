@@ -8,7 +8,7 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "Setting")
+@Table(name = "setting")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,11 +17,10 @@ public class Setting {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(name = "absence_cost")
+    @Column(nullable = false, precision = 8, scale = 2)
     private BigDecimal absenceCost;
-    @Column(name = "late_arrival_cost")
+    @Column(nullable = false, precision = 8, scale = 2)
     private BigDecimal lateArrivalCost;
-
     private int toleranceTime;
     private int absenceThreshold;
 }
