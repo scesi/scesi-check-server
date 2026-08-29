@@ -5,7 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 
 import jakarta.validation.Valid;
-import scesi.org.check.user.service.UserService;
+import scesi.org.check.user.service.UserServiceImpl;
 import scesi.org.check.user.model.entity.User;
 
 import java.util.Optional;
@@ -14,7 +14,7 @@ import java.util.Optional;
 @RequestMapping("/user")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @PostMapping
     public ResponseEntity<User> saveUser(@RequestBody User user) {

@@ -18,8 +18,10 @@ public class Rol {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
+
     @Column(nullable = false)
     private String rol;
+
     @OneToMany(mappedBy = "rol")
     private List<RolUser> rolUser;
 }

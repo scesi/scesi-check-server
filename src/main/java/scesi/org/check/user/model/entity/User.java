@@ -1,4 +1,5 @@
 package scesi.org.check.user.model.entity;
+
 import lombok.*;
 import jakarta.persistence.*;
 
@@ -14,18 +15,14 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
-
     @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private String lastName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
-
-    @Column(nullable = false)
-    private String sisCode;
 
     @Column(nullable = false)
     private Boolean active;
@@ -33,4 +30,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<RolUser> rolUser;
 
+    @PrePersist
+    public void prePersistEntity(){
+        this.active = true;
+    }
 }

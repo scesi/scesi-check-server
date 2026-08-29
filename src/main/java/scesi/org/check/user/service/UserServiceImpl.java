@@ -1,5 +1,4 @@
 package scesi.org.check.user.service;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import scesi.org.check.user.model.entity.User;
 import scesi.org.check.user.model.repository.IUserRepository;
@@ -7,10 +6,13 @@ import scesi.org.check.user.model.repository.IUserRepository;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserServiceImpl {
 
-    @Autowired
-    private IUserRepository iUserRepository;
+    private final IUserRepository iUserRepository;
+
+    public UserServiceImpl(IUserRepository iUserRepository){
+        this.iUserRepository = iUserRepository;
+    }
 
     public User saveUser(User user) {
         if(user.getId() == null) {
