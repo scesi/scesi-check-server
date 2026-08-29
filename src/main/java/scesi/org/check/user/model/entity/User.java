@@ -7,6 +7,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import java.util.List;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     @Column(nullable = false)
     private String name;
 

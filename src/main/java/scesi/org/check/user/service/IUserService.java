@@ -4,11 +4,13 @@ import scesi.org.check.user.model.entity.User;
 import scesi.org.check.user.model.request.CreateUserRequest;
 import scesi.org.check.user.model.request.UpdateUserRequest;
 
+import java.util.List;
+
 public interface IUserService {
     User getUserById(Long id);
-    User getAllUsers();
-    Boolean DeleteUser(Long id);
-    User CreateUser(CreateUserRequest request);
-    User UpdateUser(Long id, UpdateUserRequest request);
-    Boolean AssignRol(Long userId, Long rolId);
+    List<User> getAllUsers();
+    Boolean deleteUser(Long id);
+    User createUser(CreateUserRequest request);
+    User updateUser(Long id, UpdateUserRequest request);
+    Boolean assignRol(Long userId, Long rolId);
 }

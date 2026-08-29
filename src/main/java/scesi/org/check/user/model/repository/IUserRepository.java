@@ -4,5 +4,5 @@ import org.springframework.stereotype.Repository;
 import scesi.org.check.user.model.entity.User;
 
 @Repository
-public interface IUserRepository extends JpaRepository<User, Integer> {
+public interface IUserRepository extends JpaRepository<User, Long> {
 }

@@ -1,43 +1,85 @@
 package scesi.org.check.user.service;
+
 import org.springframework.stereotype.Service;
 import scesi.org.check.user.model.entity.User;
+import scesi.org.check.user.model.exceptions.UserNotFoundException;
 import scesi.org.check.user.model.repository.IUserRepository;
+import scesi.org.check.user.model.request.CreateUserRequest;
+import scesi.org.check.user.model.request.UpdateUserRequest;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserServiceImpl {
+public class UserServiceImpl implements IUserService {
 
     private final IUserRepository iUserRepository;
 
-    public UserServiceImpl(IUserRepository iUserRepository){
+    public UserServiceImpl(IUserRepository iUserRepository) {
         this.iUserRepository = iUserRepository;
     }
 
-    public User saveUser(User user) {
-        if(user.getId() == null) {
-            return iUserRepository.save(user);
+
+    @Override
+    public User getUserById(Long id) {
+        Optional<User> userOptional = iUserRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException();
         }
-        return null;
+        return userOptional.get();
     }
 
-    public Optional<User> getUserById(int id) {
-        return iUserRepository.findById(id);
+    @Override
+    public List<User> getAllUsers() {
+        return iUserRepository.findAll();
     }
 
-    public User editUser(User user) {
-        if(user.getId() != null && iUserRepository.existsById(user.getId())) {
-            return iUserRepository.save(user);
+    @Override
+    public Boolean deleteUser(Long id) {
+        Optional<User> userOptional = iUserRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException();
         }
-        return null;
-    }
-
-    public boolean deleteUser(int id) {
-        if (!iUserRepository.existsById(id)) {
-            return false;
-        }
-
-        iUserRepository.deleteById(id);
+        iUserRepository.delete(userOptional.get());
         return true;
+    }
+
+    @Override
+    public User createUser(CreateUserRequest request) {
+        final User user = User.builder()
+                .name(request.name())
+                .lastName(request.lastName())
+                .email(request.email())
+                .build();
+        return iUserRepository.save(user);
+    }
+
+    @Override
+    public User updateUser(Long id, UpdateUserRequest request) {
+        Optional<User> userOptional = iUserRepository.findById(id);
+        if (userOptional.isEmpty()) {
+            throw new UserNotFoundException();
+        }
+        User userToUpdate = userOptional.get();
+        if (request.active() != null) {
+            userToUpdate.setActive(request.active());
+        }
+        if (request.email() != null) {
+            userToUpdate.setEmail(request.email());
+        }
+        if (request.lastName() != null) {
+            userToUpdate.setLastName(request.lastName());
+        }
+        if (request.name() != null) {
+            userToUpdate.setName(request.name());
+        }
+        iUserRepository.save(userToUpdate);
+        return userToUpdate;
+    }
+
+    @Override
+    public Boolean assignRol(Long userId, Long rolId) {
+        // TODO: when Rol module is implemented
+        return null;
     }
 }

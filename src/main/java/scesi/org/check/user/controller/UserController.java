@@ -22,7 +22,7 @@ public class UserController {
     }
 
     @DeleteMapping(value ="/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         if (!userService.deleteUser(id)) {
             return ResponseEntity.notFound().build();
         }
@@ -30,7 +30,7 @@ public class UserController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<Optional<User>> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserById(id));
     }
 
