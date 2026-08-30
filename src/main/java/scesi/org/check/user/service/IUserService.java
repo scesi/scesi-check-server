@@ -1,5 +1,7 @@
 package scesi.org.check.user.service;
 
+import scesi.org.check.rol.model.entity.Rol;
+import scesi.org.check.user.model.dto.RolesOfUserDTO;
 import scesi.org.check.user.model.entity.User;
 import scesi.org.check.user.model.request.CreateUserRequest;
 import scesi.org.check.user.model.request.UpdateUserRequest;
@@ -13,4 +15,6 @@ public interface IUserService {
     User createUser(CreateUserRequest request);
     User updateUser(Long id, UpdateUserRequest request);
     Boolean assignRol(Long userId, Long rolId);
+    Boolean deleteRolAssigned(Long userId, Long rolId);
+    List<RolesOfUserDTO> getAllAssignedUserRoles(Long userId);
 }

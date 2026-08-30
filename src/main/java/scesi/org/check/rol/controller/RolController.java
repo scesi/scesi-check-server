@@ -1,7 +1,6 @@
 package scesi.org.check.rol.controller;
 
 import jakarta.websocket.server.PathParam;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -99,4 +98,5 @@ public class RolController {
                 .rol(rol.getRol())
                 .build();
     }
+    // TODO: implement exceptions handlers.
 }

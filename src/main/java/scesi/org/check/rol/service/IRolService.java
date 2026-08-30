@@ -7,9 +7,9 @@ import scesi.org.check.rol.model.request.UpdateRolRequest;
 import java.util.List;
 
 public interface IRolService {
-    Rol getRolById(Long id);
+    Rol getRolById(Long rolId);
     List<Rol> getAllRoles();
-    Boolean deleteRol(Long id);
+    Boolean deleteRol(Long rolId);
     Rol createRol(CreateRolRequest request);
     Rol updateRol(Long rolId, UpdateRolRequest request);
 }
