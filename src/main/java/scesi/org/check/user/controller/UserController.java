@@ -130,11 +130,11 @@ public class UserController {
     @GetMapping("/{userId}/rol/")
     public ResponseEntity<StandardResponse<List<RolesOfUserDTO>>> getAllRolesOfUser(
             @PathVariable("userId") final Long userId
-    ){
+    ) {
         final List<RolesOfUserDTO> assignedUserRoles = iUserService.getAllAssignedUserRoles(userId);
         final StandardResponse<List<RolesOfUserDTO>> standardResponse = StandardResponse.<List<RolesOfUserDTO>>builder()
                 .statusCode(HttpStatus.OK.value())
-                .message("Rol removed successfully")
+                .message("Roles of users retrieved successfully")
                 .data(assignedUserRoles)
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(standardResponse);

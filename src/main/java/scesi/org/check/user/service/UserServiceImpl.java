@@ -88,7 +88,6 @@ public class UserServiceImpl implements IUserService {
         return userToUpdate;
     }
 
-    // TODO: create exception for unique constraints
     @Override
     public Boolean assignRol(Long userId, Long rolId) {
         Rol rol = iRolService.getRolById(rolId);
@@ -98,7 +97,7 @@ public class UserServiceImpl implements IUserService {
         }
         User user = userOptional.get();
         Optional<RolUser> rolUserOptional = iRolUserRepository.findByRolIdAndUserId(rolId, userId);
-        if(rolUserOptional.isPresent()){
+        if (rolUserOptional.isPresent()) {
             throw new RolUserAlreadyExistException();
         }
         RolUser rolUser = RolUser.builder()
@@ -112,7 +111,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public Boolean removeRolAssigned(Long userId, Long rolId) {
         Optional<RolUser> rolUserOptional = iRolUserRepository.findByRolIdAndUserId(rolId, userId);
-        if(rolUserOptional.isEmpty()){
+        if (rolUserOptional.isEmpty()) {
             throw new RolUserNotFoundException();
         }
         iRolUserRepository.delete(rolUserOptional.get());
