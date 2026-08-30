@@ -98,5 +98,4 @@ public class RolController {
                 .rol(rol.getRol())
                 .build();
     }
-    // TODO: implement exceptions handlers.
 }
