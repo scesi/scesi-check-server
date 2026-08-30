@@ -8,6 +8,7 @@ import scesi.org.check.user.model.entity.RolUser;
 import scesi.org.check.user.model.entity.User;
 import scesi.org.check.user.model.exceptions.RolUserAlreadyExistException;
 import scesi.org.check.user.model.exceptions.RolUserNotFoundException;
+import scesi.org.check.user.model.exceptions.UserEmailAlreadyExistException;
 import scesi.org.check.user.model.exceptions.UserNotFoundException;
 import scesi.org.check.user.model.repository.IRolUserRepository;
 import scesi.org.check.user.model.repository.IUserRepository;
@@ -57,6 +58,10 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User createUser(CreateUserRequest request) {
+        Optional<User> userOptionalEmailVerification = iUserRepository.findByEmail(request.email());
+        if (userOptionalEmailVerification.isPresent()) {
+            throw new UserEmailAlreadyExistException();
+        }
         final User user = User.builder()
                 .name(request.name())
                 .lastName(request.lastName())
@@ -76,6 +81,10 @@ public class UserServiceImpl implements IUserService {
             userToUpdate.setActive(request.active());
         }
         if (request.email() != null) {
+            Optional<User> userOptionalEmailVerification = iUserRepository.findByEmail(request.email());
+            if (userOptionalEmailVerification.isPresent()) {
+                throw new UserEmailAlreadyExistException();
+            }
             userToUpdate.setEmail(request.email());
         }
         if (request.lastName() != null) {

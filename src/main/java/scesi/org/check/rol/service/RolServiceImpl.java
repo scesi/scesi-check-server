@@ -46,8 +46,8 @@ public class RolServiceImpl implements IRolService {
 
     @Override
     public Rol createRol(CreateRolRequest request) {
-        Optional<Rol> rolOptional = iRolRepository.findByRol(request.rol());
-        if (rolOptional.isPresent()) {
+        Optional<Rol> rolOptionalVerification = iRolRepository.findByRol(request.rol());
+        if (rolOptionalVerification.isPresent()) {
             throw new RolUserAlreadyExistException();
         }
         final Rol rol = Rol.builder()
@@ -62,12 +62,12 @@ public class RolServiceImpl implements IRolService {
         if (rolOptional.isEmpty()) {
             throw new RolNotFoundException();
         }
-        Optional<Rol> rolOptionalName = iRolRepository.findByRol(request.rol());
-        if (rolOptionalName.isPresent()) {
-            throw new RolUserAlreadyExistException();
-        }
         Rol rolToUpdate = rolOptional.get();
         if (request.rol() != null) {
+            Optional<Rol> rolOptionalVerification = iRolRepository.findByRol(request.rol());
+            if (rolOptionalVerification.isPresent()) {
+                throw new RolUserAlreadyExistException();
+            }
             rolToUpdate.setRol(request.rol());
         }
         iRolRepository.save(rolToUpdate);
