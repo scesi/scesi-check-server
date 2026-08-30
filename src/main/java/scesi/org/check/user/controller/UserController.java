@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import scesi.org.check.core.model.response.StandardResponse;
+import scesi.org.check.user.model.dto.RolesOfUserDTO;
 import scesi.org.check.user.model.entity.User;
 import scesi.org.check.user.model.request.CreateUserRequest;
 import scesi.org.check.user.model.request.UpdateUserRequest;
@@ -87,7 +88,7 @@ public class UserController {
             @PathVariable("userId") final Long userId,
             @Validated
             @RequestBody final UpdateUserRequest request
-    ){
+    ) {
         final User user = iUserService.updateUser(userId, request);
         final UserResponse userResponse = generateUserResponse(user);
         final StandardResponse<UserResponse> standardResponse = StandardResponse.<UserResponse>builder()
@@ -97,6 +98,48 @@ public class UserController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
     }
+
+    @PostMapping("/{userId}/role/{rolId}")
+    public ResponseEntity<StandardResponse<Boolean>> addRoleToUser(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("rolId") final Long rolId
+    ) {
+        final Boolean rolAssigned = iUserService.assignRol(userId, rolId);
+        final StandardResponse<Boolean> standardResponse = StandardResponse.<Boolean>builder()
+                .statusCode(HttpStatus.CREATED.value())
+                .message("Rol assigned successfully")
+                .data(rolAssigned)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(standardResponse);
+    }
+
+    @DeleteMapping("/{userId}/rol/{rolId}")
+    public ResponseEntity<StandardResponse<Boolean>> removeRoleToUser(
+            @PathVariable("userId") final Long userId,
+            @PathVariable("rolId") final Long rolId
+    ) {
+        final Boolean rolDeleted = iUserService.removeRolAssigned(userId, rolId);
+        final StandardResponse<Boolean> standardResponse = StandardResponse.<Boolean>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("Rol removed successfully")
+                .data(rolDeleted)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
+    }
+
+    @GetMapping("/{userId}/rol/")
+    public ResponseEntity<StandardResponse<List<RolesOfUserDTO>>> getAllRolesOfUser(
+            @PathVariable("userId") final Long userId
+    ){
+        final List<RolesOfUserDTO> assignedUserRoles = iUserService.getAllAssignedUserRoles(userId);
+        final StandardResponse<List<RolesOfUserDTO>> standardResponse = StandardResponse.<List<RolesOfUserDTO>>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("Rol removed successfully")
+                .data(assignedUserRoles)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
+    }
+
 
     private UserResponse generateUserResponse(User user) {
         return UserResponse.builder()

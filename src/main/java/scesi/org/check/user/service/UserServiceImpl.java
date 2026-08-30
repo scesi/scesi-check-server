@@ -110,7 +110,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public Boolean deleteRolAssigned(Long userId, Long rolId) {
+    public Boolean removeRolAssigned(Long userId, Long rolId) {
         Optional<RolUser> rolUserOptional = iRolUserRepository.findByRolIdAndUserId(rolId, userId);
         if(rolUserOptional.isEmpty()){
             throw new RolUserNotFoundException();
