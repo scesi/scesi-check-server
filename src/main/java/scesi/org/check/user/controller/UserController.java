@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/user")
 public class UserController {
 
-    private IUserService iUserService;
+    private final IUserService iUserService;
 
     public UserController(IUserService iUserService) {
         this.iUserService = iUserService;
@@ -81,7 +81,7 @@ public class UserController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
     }
-    
+
     @PatchMapping("/{userId}")
     public ResponseEntity<StandardResponse<UserResponse>> updateUser(
             @PathVariable("userId") final Long userId,
