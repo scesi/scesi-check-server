@@ -1,10 +1,11 @@
-package scesi.org.check.user.model.entity;
+package scesi.org.check.rol.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import scesi.org.check.user.model.entity.RolUser;
 
 import java.util.List;
 

@@ -77,6 +77,7 @@ public class UserServiceImpl implements IUserService {
         return userToUpdate;
     }
 
+    // TODO: create exception to unique constraints
     @Override
     public Boolean assignRol(Long userId, Long rolId) {
         // TODO: when Rol module is implemented

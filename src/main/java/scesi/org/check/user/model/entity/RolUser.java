@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import scesi.org.check.rol.model.entity.Rol;
 
 @Entity
 @Table(name = "rol_users")
