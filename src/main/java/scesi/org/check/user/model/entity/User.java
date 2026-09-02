@@ -2,6 +2,7 @@ package scesi.org.check.user.model.entity;
 
 import lombok.*;
 import jakarta.persistence.*;
+import scesi.org.check.attendance.model.entity.AttendanceEntity;
 
 import java.util.List;
 
@@ -31,8 +32,11 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<RolUser> rolUser;
 
+    @OneToMany(mappedBy = "user")
+    private List<AttendanceEntity> attendanceList;
+
     @PrePersist
-    public void prePersistEntity(){
+    public void prePersistEntity() {
         this.active = true;
     }
 }
