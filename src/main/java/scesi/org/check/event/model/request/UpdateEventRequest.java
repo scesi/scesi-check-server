@@ -18,4 +18,12 @@ public record UpdateEventRequest(
         Instant endTime,
         Instant nextControl
 ) {
+    public UpdateEventRequest {
+        if (startTime != null && endTime != null && !endTime.isAfter(startTime)) {
+            throw new IllegalArgumentException("endTime should be large than startTime");
+        }
+        if (endTime != null && nextControl != null && !nextControl.isAfter(endTime)) {
+            throw new IllegalArgumentException("nextControl should be large than endTime");
+        }
+    }
 }

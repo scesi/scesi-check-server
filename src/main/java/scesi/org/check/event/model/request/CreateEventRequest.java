@@ -19,8 +19,15 @@ public record CreateEventRequest(
         @FutureOrPresent(message = "starTime should be at present or future")
         Instant startTime,
 
-        //TODO: validate endTime > startTime, and nextControl > endTime
         Instant endTime,
         Instant nextControl
 ) {
+    public CreateEventRequest {
+        if (startTime != null && endTime != null && !endTime.isAfter(startTime)) {
+            throw new IllegalArgumentException("endTime should be large than startTime");
+        }
+        if (endTime != null && nextControl != null && !nextControl.isAfter(endTime)) {
+            throw new IllegalArgumentException("nextControl should be large than endTime");
+        }
+    }
 }
