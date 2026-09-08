@@ -1,9 +1,9 @@
 package scesi.org.check.rol.model.exception;
 
-public class RolAlreadyExist extends RuntimeException {
+public class RolAlreadyExistException extends RuntimeException {
     public static final String DEFAULT_MESSAGE = "Rol already exist";
 
-    public RolAlreadyExist() {
+    public RolAlreadyExistException() {
         super(DEFAULT_MESSAGE);
     }
 }
