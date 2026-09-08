@@ -7,9 +7,13 @@ import scesi.org.check.event.model.request.UpdateEventRequest;
 import java.util.List;
 
 public interface IEventService {
-    EventEntity getById(Long id);
+    EventEntity getById(Long eventId);
+
     EventEntity createEvent(CreateEventRequest request);
-    EventEntity updateEvent(UpdateEventRequest request, Long id);
-    Boolean deleteEvent(Long id);
+
+    EventEntity updateEvent(UpdateEventRequest request, Long eventId);
+
+    Boolean deleteEvent(Long eventId);
+
     List<EventEntity> getAllEvents();
 }
