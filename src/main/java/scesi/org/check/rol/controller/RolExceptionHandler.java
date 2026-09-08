@@ -5,13 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import scesi.org.check.core.model.response.StandardResponse;
-import scesi.org.check.rol.model.exception.RolAlreadyExist;
+import scesi.org.check.rol.model.exception.RolAlreadyExistException;
 import scesi.org.check.rol.model.exception.RolNotFoundException;
 
 @ControllerAdvice
 public class RolExceptionHandler {
-    @ExceptionHandler(RolAlreadyExist.class)
-    public ResponseEntity<StandardResponse<Object>> handleRolAlreadyExist(RolAlreadyExist ex) {
+    @ExceptionHandler(RolAlreadyExistException.class)
+    public ResponseEntity<StandardResponse<Object>> handleRolAlreadyExistException(RolAlreadyExistException ex) {
         StandardResponse<Object> response = StandardResponse.builder()
                 .statusCode(HttpStatus.BAD_REQUEST.value())
                 .message(ex.getMessage())

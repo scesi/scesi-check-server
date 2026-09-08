@@ -1,5 +1,6 @@
 package scesi.org.check.event.service;
 
+import org.springframework.stereotype.Service;
 import scesi.org.check.event.model.entity.EventEntity;
 import scesi.org.check.event.model.exception.EventAlreadyExistException;
 import scesi.org.check.event.model.exception.EventNotFoundException;
@@ -10,6 +11,7 @@ import scesi.org.check.event.model.request.UpdateEventRequest;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class EventServiceImpl implements IEventService {
 
     private final IEventRepository iEventRepository;
