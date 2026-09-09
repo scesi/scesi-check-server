@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import scesi.org.check.attendance.model.entity.AttendanceEntity;
 import scesi.org.check.attendance.model.repository.IAttendanceRepository;
-import scesi.org.check.attendance.model.repository.ITypeAttendanceRepository;
 import scesi.org.check.attendance.service.csv.AttendanceCsvRow;
 import scesi.org.check.attendance.service.csv.IAttendanceCsvParser;
 import scesi.org.check.attendance.service.rule.AttendanceContext;
@@ -29,7 +28,9 @@ public class AttendanceServiceImpl implements IAttendanceService {
 
     public AttendanceServiceImpl(IAttendanceRepository iAttendanceRepository,
                                  IUserRepository iUserRepository,
-                                 IEventRepository iEventRepository, ITypeAttendanceRepository iTypeAttendanceRepository, IAttendanceCsvParser iAttendanceCsvParser, List<IAttendanceRule> iAttendanceRule) {
+                                 IEventRepository iEventRepository,
+                                 IAttendanceCsvParser iAttendanceCsvParser,
+                                 List<IAttendanceRule> iAttendanceRule) {
         this.iAttendanceRepository = iAttendanceRepository;
         this.iUserRepository = iUserRepository;
         this.iEventRepository = iEventRepository;
