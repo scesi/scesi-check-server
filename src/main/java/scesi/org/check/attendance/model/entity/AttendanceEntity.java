@@ -25,7 +25,6 @@ public class AttendanceEntity {
     @Column(nullable = false)
     private Instant creationDate;
 
-    @Column(nullable = false)
     private String readerAccuracy;
 
     @ManyToOne
