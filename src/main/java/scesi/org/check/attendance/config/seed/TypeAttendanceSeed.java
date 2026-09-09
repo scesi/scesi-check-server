@@ -1,4 +1,4 @@
-package scesi.org.check.attendance.model.seed;
+package scesi.org.check.attendance.config.seed;
 
 import org.jspecify.annotations.NonNull;
 import org.springframework.boot.ApplicationArguments;
@@ -19,7 +19,7 @@ public class TypeAttendanceSeed implements ApplicationRunner {
     }
 
     @Override
-    public void run(@NonNull ApplicationArguments args) throws Exception {
+    public void run(@NonNull ApplicationArguments args) {
         if (iTypeAttendanceRepository.count() == 0) {
             List<TypeAttendanceEntity> typeAttendanceEntities = new ArrayList<>();
             typeAttendanceEntities.add(TypeAttendanceEntity.builder().id(1L).typeAttendance("Present").build());

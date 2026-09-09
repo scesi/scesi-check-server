@@ -6,7 +6,9 @@ import com.opencsv.exceptions.CsvException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import scesi.org.check.attendance.model.entity.AttendanceEntity;
+import scesi.org.check.attendance.model.entity.TypeAttendanceEntity;
 import scesi.org.check.attendance.model.repository.IAttendanceRepository;
+import scesi.org.check.attendance.model.repository.ITypeAttendanceRepository;
 import scesi.org.check.event.model.entity.EventEntity;
 import scesi.org.check.event.model.exception.EventNotFoundException;
 import scesi.org.check.event.model.repository.IEventRepository;
@@ -26,13 +28,15 @@ public class AttendanceServiceImpl implements IAttendanceService {
     private final IAttendanceRepository iAttendanceRepository;
     private final IUserRepository iUserRepository;
     private final IEventRepository iEventRepository;
+    private final ITypeAttendanceRepository iTypeAttendanceRepository;
 
     public AttendanceServiceImpl(IAttendanceRepository iAttendanceRepository,
                                  IUserRepository iUserRepository,
-                                 IEventRepository iEventRepository) {
+                                 IEventRepository iEventRepository, ITypeAttendanceRepository iTypeAttendanceRepository) {
         this.iAttendanceRepository = iAttendanceRepository;
         this.iUserRepository = iUserRepository;
         this.iEventRepository = iEventRepository;
+        this.iTypeAttendanceRepository = iTypeAttendanceRepository;
     }
 
     @Override
@@ -50,6 +54,7 @@ public class AttendanceServiceImpl implements IAttendanceService {
             if (eventEntityOptional.isEmpty()) {
                 throw new EventNotFoundException();
             }
+            TypeAttendanceEntity presentAttendance = iTypeAttendanceRepository.getReferenceById(1L);
             for (String[] row : rows) {
                 User user = iUserRepository.getReferenceById(Long.valueOf(row[0]));
                 attendanceEntities.add(AttendanceEntity.builder()
@@ -57,6 +62,7 @@ public class AttendanceServiceImpl implements IAttendanceService {
                         .readerAccuracy(row[2])
                         .user(user)
                         .event(eventEntityOptional.get())
+                        .typeAttendance(presentAttendance)
                         .build());
             }
             iAttendanceRepository.saveAll(attendanceEntities);
