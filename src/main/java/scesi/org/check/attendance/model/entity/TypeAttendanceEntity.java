@@ -13,7 +13,6 @@ import lombok.*;
 @NoArgsConstructor
 public class TypeAttendanceEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Column(nullable = false, unique = true, length = 50)

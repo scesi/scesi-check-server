@@ -19,7 +19,7 @@ public class ConfigSeed implements ApplicationRunner {
 
 
     @Override
-    public void run(@NonNull ApplicationArguments args) throws Exception {
+    public void run(@NonNull ApplicationArguments args) {
         if(iSettingsRepository.count() == 0){
             iSettingsRepository.save(Setting.builder()
                     .id(1)

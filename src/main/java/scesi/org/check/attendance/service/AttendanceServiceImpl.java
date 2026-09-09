@@ -11,6 +11,9 @@ import scesi.org.check.attendance.service.rule.IAttendanceRule;
 import scesi.org.check.event.model.entity.EventEntity;
 import scesi.org.check.event.model.exception.EventNotFoundException;
 import scesi.org.check.event.model.repository.IEventRepository;
+import scesi.org.check.settings.model.entity.Setting;
+import scesi.org.check.settings.model.exception.SettingNotFoundException;
+import scesi.org.check.settings.model.repository.ISettingsRepository;
 import scesi.org.check.user.model.entity.User;
 import scesi.org.check.user.model.repository.IUserRepository;
 
@@ -25,17 +28,19 @@ public class AttendanceServiceImpl implements IAttendanceService {
     private final IEventRepository iEventRepository;
     private final IAttendanceCsvParser iAttendanceCsvParser;
     private final List<IAttendanceRule> iAttendanceRules;
+    private final ISettingsRepository iSettingsRepository;
 
     public AttendanceServiceImpl(IAttendanceRepository iAttendanceRepository,
                                  IUserRepository iUserRepository,
                                  IEventRepository iEventRepository,
                                  IAttendanceCsvParser iAttendanceCsvParser,
-                                 List<IAttendanceRule> iAttendanceRule) {
+                                 List<IAttendanceRule> iAttendanceRule, ISettingsRepository iSettingsRepository) {
         this.iAttendanceRepository = iAttendanceRepository;
         this.iUserRepository = iUserRepository;
         this.iEventRepository = iEventRepository;
         this.iAttendanceCsvParser = iAttendanceCsvParser;
         this.iAttendanceRules = iAttendanceRule;
+        this.iSettingsRepository = iSettingsRepository;
     }
 
     @Override
@@ -53,7 +58,9 @@ public class AttendanceServiceImpl implements IAttendanceService {
 
         EventEntity event = iEventRepository.findFirstByOrderByStartTimeDesc()
                 .orElseThrow(EventNotFoundException::new);
-        AttendanceContext attendanceContext = new AttendanceContext(event, attendanceEntities);
+        Setting setting = iSettingsRepository.findById(1L)
+                .orElseThrow(SettingNotFoundException::new);
+        AttendanceContext attendanceContext = new AttendanceContext(event,setting, attendanceEntities);
         for (IAttendanceRule iAttendanceRule : iAttendanceRules) {
             iAttendanceRule.apply(attendanceContext);
         }
