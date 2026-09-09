@@ -1,5 +1,8 @@
 package scesi.org.check.attendance.model.enumerate;
 
+import lombok.Getter;
+
+@Getter
 public enum TypeAttendanceEnum {
     PRESENT(1L),
     LATE_ARRIVAL(2L),
@@ -10,7 +13,4 @@ public enum TypeAttendanceEnum {
         this.id = id;
     }
 
-    public Long getId() {
-        return id;
-    }
 }

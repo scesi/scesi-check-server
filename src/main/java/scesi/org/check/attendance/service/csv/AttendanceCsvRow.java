@@ -1,12 +1,22 @@
 package scesi.org.check.attendance.service.csv;
 
-import scesi.org.check.attendance.model.enumerate.TypeAttendanceEnum;
+import com.opencsv.bean.CsvBindByName;
+import lombok.*;
 
 import java.time.Instant;
 
-public record AttendanceCsvRow(
-        TypeAttendanceEnum id,
-        Instant creationDate,
-        String readerAccuracy
-) {
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class AttendanceCsvRow {
+
+    @CsvBindByName(column = "id", required = true)
+    private Long idUser;
+
+    @CsvBindByName(column = "creationDate", required = true)
+    private Instant creationDate;
+
+    @CsvBindByName(column = "readerAccuracy", required = true)
+    private String readerAccuracy;
 }
