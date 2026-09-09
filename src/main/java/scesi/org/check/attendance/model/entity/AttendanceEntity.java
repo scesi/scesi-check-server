@@ -37,7 +37,7 @@ public class AttendanceEntity {
     private EventEntity event;
 
     @ManyToOne
-    @JoinColumn(name = "type_attendance_id", nullable = false)
+    @JoinColumn(name = "type_attendance_id")
     private TypeAttendanceEntity typeAttendance;
 
     @PrePersist
