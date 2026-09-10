@@ -5,7 +5,7 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import scesi.org.check.latefee.model.entity.TypeLateFeeEntity;
-import scesi.org.check.latefee.model.repository.iTypeLateFeeRepository;
+import scesi.org.check.latefee.model.repository.ITypeLateFeeRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,9 +13,9 @@ import java.util.List;
 @Component
 public class TypeLateFeeSeed implements ApplicationRunner {
 
-    private final iTypeLateFeeRepository iTypeLateFeeRepository;
+    private final ITypeLateFeeRepository iTypeLateFeeRepository;
 
-    public TypeLateFeeSeed(iTypeLateFeeRepository iTypeLateFeeRepository) {
+    public TypeLateFeeSeed(ITypeLateFeeRepository iTypeLateFeeRepository) {
         this.iTypeLateFeeRepository = iTypeLateFeeRepository;
     }
 

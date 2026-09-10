@@ -8,6 +8,7 @@ import scesi.org.check.settings.model.entity.Setting;
 import scesi.org.check.settings.model.repository.ISettingsRepository;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Component
 public class SettingSeed implements ApplicationRunner {
@@ -20,13 +21,14 @@ public class SettingSeed implements ApplicationRunner {
 
     @Override
     public void run(@NonNull ApplicationArguments args) {
-        if(iSettingsRepository.count() == 0){
+        if (iSettingsRepository.count() == 0) {
             iSettingsRepository.save(Setting.builder()
                     .id(1)
                     .absenceCost(BigDecimal.TWO)
                     .lateArrivalCost(BigDecimal.valueOf(20))
                     .toleranceTimeMinutes(5)
                     .absenceThresholdMinutes(30)
+                    .lastLateFeeGenerationDate(Instant.now())
                     .build());
         }
     }

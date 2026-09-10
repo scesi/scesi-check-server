@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.Instant;
 
 @Entity
 @Table(name = "setting")
@@ -27,4 +28,7 @@ public class Setting {
 
     @Column(nullable = false)
     private int absenceThresholdMinutes;
+
+    @Column(nullable = false)
+    private Instant lastLateFeeGenerationDate;
 }
