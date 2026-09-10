@@ -10,10 +10,10 @@ import scesi.org.check.settings.model.repository.ISettingsRepository;
 import java.math.BigDecimal;
 
 @Component
-public class ConfigSeed implements ApplicationRunner {
+public class SettingSeed implements ApplicationRunner {
     private final ISettingsRepository iSettingsRepository;
 
-    public ConfigSeed(ISettingsRepository iSettingsRepository) {
+    public SettingSeed(ISettingsRepository iSettingsRepository) {
         this.iSettingsRepository = iSettingsRepository;
     }
 
