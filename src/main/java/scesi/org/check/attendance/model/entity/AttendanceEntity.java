@@ -3,7 +3,7 @@ package scesi.org.check.attendance.model.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import scesi.org.check.event.model.entity.EventEntity;
-import scesi.org.check.user.model.entity.User;
+import scesi.org.check.user.model.entity.UserEntity;
 
 import java.time.Instant;
 
@@ -29,7 +29,7 @@ public class AttendanceEntity {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "event_id", nullable = false)

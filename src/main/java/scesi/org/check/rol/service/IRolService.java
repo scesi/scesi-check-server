@@ -1,15 +1,15 @@
 package scesi.org.check.rol.service;
 
-import scesi.org.check.rol.model.entity.Rol;
+import scesi.org.check.rol.model.entity.RolEntity;
 import scesi.org.check.rol.model.request.CreateRolRequest;
 import scesi.org.check.rol.model.request.UpdateRolRequest;
 
 import java.util.List;
 
 public interface IRolService {
-    Rol getRolById(Long rolId);
-    List<Rol> getAllRoles();
+    RolEntity getRolById(Long rolId);
+    List<RolEntity> getAllRoles();
     Boolean deleteRol(Long rolId);
-    Rol createRol(CreateRolRequest request);
-    Rol updateRol(Long rolId, UpdateRolRequest request);
+    RolEntity createRol(CreateRolRequest request);
+    RolEntity updateRol(Long rolId, UpdateRolRequest request);
 }

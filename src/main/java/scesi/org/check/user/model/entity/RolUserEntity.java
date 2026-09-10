@@ -2,7 +2,7 @@ package scesi.org.check.user.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import scesi.org.check.rol.model.entity.Rol;
+import scesi.org.check.rol.model.entity.RolEntity;
 
 import java.time.Instant;
 
@@ -19,7 +19,7 @@ import java.time.Instant;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class RolUser {
+public class RolUserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -29,11 +29,11 @@ public class RolUser {
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
-    private User user;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "rol_id", nullable = false)
-    private Rol rol;
+    private RolEntity rol;
 
     @PrePersist
     public void prePersistentEntity() {

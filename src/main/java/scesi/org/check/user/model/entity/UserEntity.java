@@ -13,7 +13,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class User {
+public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -30,7 +30,7 @@ public class User {
     private Boolean active;
 
     @OneToMany(mappedBy = "user")
-    private List<RolUser> rolUser;
+    private List<RolUserEntity> rolUser;
 
     @OneToMany(mappedBy = "user")
     private List<AttendanceEntity> attendanceList;

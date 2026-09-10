@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import scesi.org.check.core.model.response.StandardResponse;
-import scesi.org.check.rol.model.entity.Rol;
+import scesi.org.check.rol.model.entity.RolEntity;
 import scesi.org.check.rol.model.request.CreateRolRequest;
 import scesi.org.check.rol.model.request.UpdateRolRequest;
 import scesi.org.check.rol.model.response.RolResponse;
@@ -27,7 +27,7 @@ public class RolController {
     public ResponseEntity<StandardResponse<RolResponse>> getRolById(
             @PathParam("rolId") final Long id
     ) {
-        final Rol rol = iRolService.getRolById(id);
+        final RolEntity rol = iRolService.getRolById(id);
         final RolResponse rolResponse = generateRolResponse(rol);
         final StandardResponse<RolResponse> standardResponse = StandardResponse.<RolResponse>builder()
                 .statusCode(HttpStatus.OK.value())
@@ -38,7 +38,7 @@ public class RolController {
 
     @GetMapping("/")
     public ResponseEntity<StandardResponse<List<RolResponse>>> getAllRoles() {
-        final List<Rol> rol = iRolService.getAllRoles();
+        final List<RolEntity> rol = iRolService.getAllRoles();
         final List<RolResponse> rolResponseList = rol.stream().map(this::generateRolResponse).toList();
         final StandardResponse<List<RolResponse>> standardResponse = StandardResponse.<List<RolResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
@@ -66,7 +66,7 @@ public class RolController {
             @Validated
             @RequestBody final CreateRolRequest request
     ) {
-        final Rol rolCreated = iRolService.createRol(request);
+        final RolEntity rolCreated = iRolService.createRol(request);
         final RolResponse rolResponse = generateRolResponse(rolCreated);
         final StandardResponse<RolResponse> standardResponse = StandardResponse.<RolResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
@@ -82,7 +82,7 @@ public class RolController {
             @Validated
             @RequestBody final UpdateRolRequest request
     ) {
-        final Rol rolUpdated = iRolService.updateRol(rolId, request);
+        final RolEntity rolUpdated = iRolService.updateRol(rolId, request);
         final RolResponse rolResponse = generateRolResponse(rolUpdated);
         final StandardResponse<RolResponse> standardResponse = StandardResponse.<RolResponse>builder()
                 .statusCode(HttpStatus.OK.value())
@@ -92,7 +92,7 @@ public class RolController {
         return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
     }
 
-    private RolResponse generateRolResponse(Rol rol) {
+    private RolResponse generateRolResponse(RolEntity rol) {
         return RolResponse.builder()
                 .id(rol.getId())
                 .rol(rol.getRol())
