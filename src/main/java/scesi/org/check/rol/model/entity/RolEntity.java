@@ -2,7 +2,7 @@ package scesi.org.check.rol.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import scesi.org.check.user.model.entity.RolUser;
+import scesi.org.check.user.model.entity.RolUserEntity;
 
 import java.util.List;
 
@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Rol {
+public class RolEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -22,5 +22,5 @@ public class Rol {
     private String rol;
 
     @OneToMany(mappedBy = "rol")
-    private List<RolUser> rolUser;
+    private List<RolUserEntity> rolUserEntity;
 }

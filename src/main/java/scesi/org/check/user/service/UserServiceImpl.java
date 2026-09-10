@@ -1,15 +1,15 @@
 package scesi.org.check.user.service;
 
 import org.springframework.stereotype.Service;
-import scesi.org.check.rol.model.entity.Rol;
+import scesi.org.check.rol.model.entity.RolEntity;
 import scesi.org.check.rol.service.IRolService;
-import scesi.org.check.user.model.dto.RolesOfUserDTO;
-import scesi.org.check.user.model.entity.RolUser;
-import scesi.org.check.user.model.entity.User;
+import scesi.org.check.user.model.entity.RolUserEntity;
+import scesi.org.check.user.model.entity.UserEntity;
 import scesi.org.check.user.model.exceptions.RolUserAlreadyExistException;
 import scesi.org.check.user.model.exceptions.RolUserNotFoundException;
 import scesi.org.check.user.model.exceptions.UserEmailAlreadyExistException;
 import scesi.org.check.user.model.exceptions.UserNotFoundException;
+import scesi.org.check.user.model.projection.IRolesOfUserProjection;
 import scesi.org.check.user.model.repository.IRolUserRepository;
 import scesi.org.check.user.model.repository.IUserRepository;
 import scesi.org.check.user.model.request.CreateUserRequest;
@@ -33,8 +33,8 @@ public class UserServiceImpl implements IUserService {
 
 
     @Override
-    public User getUserById(Long id) {
-        Optional<User> userOptional = iUserRepository.findById(id);
+    public UserEntity getUserById(Long id) {
+        Optional<UserEntity> userOptional = iUserRepository.findById(id);
         if (userOptional.isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -42,13 +42,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserEntity> getAllUsers() {
         return iUserRepository.findAll();
     }
 
     @Override
     public Boolean deleteUser(Long id) {
-        Optional<User> userOptional = iUserRepository.findById(id);
+        Optional<UserEntity> userOptional = iUserRepository.findById(id);
         if (userOptional.isEmpty()) {
             throw new UserNotFoundException();
         }
@@ -57,12 +57,12 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User createUser(CreateUserRequest request) {
-        Optional<User> userOptionalEmailVerification = iUserRepository.findByEmail(request.email());
+    public UserEntity createUser(CreateUserRequest request) {
+        Optional<UserEntity> userOptionalEmailVerification = iUserRepository.findByEmail(request.email());
         if (userOptionalEmailVerification.isPresent()) {
             throw new UserEmailAlreadyExistException();
         }
-        final User user = User.builder()
+        final UserEntity user = UserEntity.builder()
                 .name(request.name())
                 .lastName(request.lastName())
                 .email(request.email())
@@ -71,17 +71,17 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User updateUser(Long id, UpdateUserRequest request) {
-        Optional<User> userOptional = iUserRepository.findById(id);
+    public UserEntity updateUser(Long id, UpdateUserRequest request) {
+        Optional<UserEntity> userOptional = iUserRepository.findById(id);
         if (userOptional.isEmpty()) {
             throw new UserNotFoundException();
         }
-        User userToUpdate = userOptional.get();
+        UserEntity userToUpdate = userOptional.get();
         if (request.active() != null) {
             userToUpdate.setActive(request.active());
         }
         if (request.email() != null) {
-            Optional<User> userOptionalEmailVerification = iUserRepository.findByEmail(request.email());
+            Optional<UserEntity> userOptionalEmailVerification = iUserRepository.findByEmail(request.email());
             if (userOptionalEmailVerification.isPresent()) {
                 throw new UserEmailAlreadyExistException();
             }
@@ -99,17 +99,17 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Boolean assignRol(Long userId, Long rolId) {
-        Rol rol = iRolService.getRolById(rolId);
-        Optional<User> userOptional = iUserRepository.findById(userId);
+        RolEntity rol = iRolService.getRolById(rolId);
+        Optional<UserEntity> userOptional = iUserRepository.findById(userId);
         if (userOptional.isEmpty()) {
             throw new UserNotFoundException();
         }
-        User user = userOptional.get();
-        Optional<RolUser> rolUserOptional = iRolUserRepository.findByRolIdAndUserId(rolId, userId);
+        UserEntity user = userOptional.get();
+        Optional<RolUserEntity> rolUserOptional = iRolUserRepository.findByRolIdAndUserId(rolId, userId);
         if (rolUserOptional.isPresent()) {
             throw new RolUserAlreadyExistException();
         }
-        RolUser rolUser = RolUser.builder()
+        RolUserEntity rolUser = RolUserEntity.builder()
                 .user(user)
                 .rol(rol)
                 .build();
@@ -119,7 +119,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Boolean removeRolAssigned(Long userId, Long rolId) {
-        Optional<RolUser> rolUserOptional = iRolUserRepository.findByRolIdAndUserId(rolId, userId);
+        Optional<RolUserEntity> rolUserOptional = iRolUserRepository.findByRolIdAndUserId(rolId, userId);
         if (rolUserOptional.isEmpty()) {
             throw new RolUserNotFoundException();
         }
@@ -128,7 +128,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public List<RolesOfUserDTO> getAllAssignedUserRoles(Long userId) {
+    public List<IRolesOfUserProjection> getAllAssignedUserRoles(Long userId) {
         return iRolUserRepository.findAllRolesByUserId(userId);
     }
 }

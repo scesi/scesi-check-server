@@ -5,7 +5,7 @@ import scesi.org.check.attendance.model.entity.AttendanceEntity;
 import scesi.org.check.attendance.model.entity.TypeAttendanceEntity;
 import scesi.org.check.attendance.model.enumerate.TypeAttendanceEnum;
 import scesi.org.check.attendance.model.repository.ITypeAttendanceRepository;
-import scesi.org.check.user.model.entity.User;
+import scesi.org.check.user.model.entity.UserEntity;
 import scesi.org.check.user.model.repository.IUserRepository;
 
 import java.time.Duration;
@@ -39,9 +39,9 @@ public class AbsenceAttendanceRule implements IAttendanceRule {
                 attendance.setTypeAttendance(absence);
             }
         }
-        List<User> usersAbsence = iUserRepository.findByIdNotInList(idUser);
-        for(User user : usersAbsence){
-            context.attendanceEntities().add(AttendanceEntity.builder().user(user).typeAttendance(absence).build());
+        List<UserEntity> usersAbsence = iUserRepository.findByIdNotInList(idUser);
+        for(UserEntity userEntity : usersAbsence){
+            context.attendanceEntities().add(AttendanceEntity.builder().user(userEntity).typeAttendance(absence).build());
         }
     }
 }

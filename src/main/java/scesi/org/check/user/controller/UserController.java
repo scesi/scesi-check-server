@@ -5,10 +5,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import scesi.org.check.core.model.response.StandardResponse;
-import scesi.org.check.user.model.dto.RolesOfUserDTO;
-import scesi.org.check.user.model.entity.User;
+import scesi.org.check.user.model.entity.UserEntity;
+import scesi.org.check.user.model.projection.IRolesOfUserProjection;
 import scesi.org.check.user.model.request.CreateUserRequest;
 import scesi.org.check.user.model.request.UpdateUserRequest;
+import scesi.org.check.user.model.response.RolesOfUserResponse;
 import scesi.org.check.user.model.response.UserResponse;
 import scesi.org.check.user.service.IUserService;
 
@@ -27,11 +28,10 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public ResponseEntity<StandardResponse<UserResponse>> getUserById(
-            // @Validated
-            // probar si se necesita la validacion de positivo o nulo
+            @Validated
             @PathVariable("userId") final long userId
     ) {
-        final User user = iUserService.getUserById(userId);
+        final UserEntity user = iUserService.getUserById(userId);
         final UserResponse userResponse = generateUserResponse(user);
         final StandardResponse<UserResponse> standardResponse = StandardResponse.<UserResponse>builder()
                 .statusCode(HttpStatus.OK.value())
@@ -43,7 +43,7 @@ public class UserController {
 
     @GetMapping("/")
     public ResponseEntity<StandardResponse<List<UserResponse>>> getAllUsers() {
-        final List<User> user = iUserService.getAllUsers();
+        final List<UserEntity> user = iUserService.getAllUsers();
         final List<UserResponse> userListResponse = user.stream()
                 .map(this::generateUserResponse)
                 .toList();
@@ -60,7 +60,7 @@ public class UserController {
             @Validated
             @RequestBody final CreateUserRequest request
     ) {
-        final User userCreated = iUserService.createUser(request);
+        final UserEntity userCreated = iUserService.createUser(request);
         final UserResponse userResponse = generateUserResponse(userCreated);
         final StandardResponse<UserResponse> standardResponse = StandardResponse.<UserResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
@@ -89,7 +89,7 @@ public class UserController {
             @Validated
             @RequestBody final UpdateUserRequest request
     ) {
-        final User user = iUserService.updateUser(userId, request);
+        final UserEntity user = iUserService.updateUser(userId, request);
         final UserResponse userResponse = generateUserResponse(user);
         final StandardResponse<UserResponse> standardResponse = StandardResponse.<UserResponse>builder()
                 .statusCode(HttpStatus.OK.value())
@@ -128,20 +128,31 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/rol/")
-    public ResponseEntity<StandardResponse<List<RolesOfUserDTO>>> getAllRolesOfUser(
+    public ResponseEntity<StandardResponse<List<RolesOfUserResponse>>> getAllRolesOfUser(
             @PathVariable("userId") final Long userId
     ) {
-        final List<RolesOfUserDTO> assignedUserRoles = iUserService.getAllAssignedUserRoles(userId);
-        final StandardResponse<List<RolesOfUserDTO>> standardResponse = StandardResponse.<List<RolesOfUserDTO>>builder()
+        final List<IRolesOfUserProjection> assignedUserRoles = iUserService.getAllAssignedUserRoles(userId);
+        final List<RolesOfUserResponse> assignedUserRolesResponse = assignedUserRoles.stream()
+                .map(this::generateRolesOfUserResponse)
+                .toList();
+
+        final StandardResponse<List<RolesOfUserResponse>> standardResponse = StandardResponse.<List<RolesOfUserResponse>>builder()
                 .statusCode(HttpStatus.OK.value())
                 .message("Roles of users retrieved successfully")
-                .data(assignedUserRoles)
+                .data(assignedUserRolesResponse)
                 .build();
+
         return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
     }
 
+    private RolesOfUserResponse generateRolesOfUserResponse(IRolesOfUserProjection rolesOfUser) {
+        return RolesOfUserResponse.builder()
+                .rol(rolesOfUser.getRol())
+                .creationDate(rolesOfUser.getCreationDate())
+                .build();
+    }
 
-    private UserResponse generateUserResponse(User user) {
+    private UserResponse generateUserResponse(UserEntity user) {
         return UserResponse.builder()
                 .id(user.getId())
                 .name(user.getName())

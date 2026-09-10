@@ -1,7 +1,7 @@
 package scesi.org.check.rol.service;
 
 import org.springframework.stereotype.Service;
-import scesi.org.check.rol.model.entity.Rol;
+import scesi.org.check.rol.model.entity.RolEntity;
 import scesi.org.check.rol.model.exception.RolNotFoundException;
 import scesi.org.check.rol.model.repository.IRolRepository;
 import scesi.org.check.rol.model.request.CreateRolRequest;
@@ -21,8 +21,8 @@ public class RolServiceImpl implements IRolService {
     }
 
     @Override
-    public Rol getRolById(Long rolId) {
-        Optional<Rol> rolOptional = iRolRepository.findById(rolId);
+    public RolEntity getRolById(Long rolId) {
+        Optional<RolEntity> rolOptional = iRolRepository.findById(rolId);
         if (rolOptional.isEmpty()) {
             throw new RolNotFoundException();
         }
@@ -30,13 +30,13 @@ public class RolServiceImpl implements IRolService {
     }
 
     @Override
-    public List<Rol> getAllRoles() {
+    public List<RolEntity> getAllRoles() {
         return iRolRepository.findAll();
     }
 
     @Override
     public Boolean deleteRol(Long rolId) {
-        Optional<Rol> rolOptional = iRolRepository.findById(rolId);
+        Optional<RolEntity> rolOptional = iRolRepository.findById(rolId);
         if (rolOptional.isEmpty()) {
             throw new RolNotFoundException();
         }
@@ -45,26 +45,26 @@ public class RolServiceImpl implements IRolService {
     }
 
     @Override
-    public Rol createRol(CreateRolRequest request) {
-        Optional<Rol> rolOptionalVerification = iRolRepository.findByRol(request.rol());
+    public RolEntity createRol(CreateRolRequest request) {
+        Optional<RolEntity> rolOptionalVerification = iRolRepository.findByRol(request.rol());
         if (rolOptionalVerification.isPresent()) {
             throw new RolUserAlreadyExistException();
         }
-        final Rol rol = Rol.builder()
+        final RolEntity rol = RolEntity.builder()
                 .rol(request.rol())
                 .build();
         return iRolRepository.save(rol);
     }
 
     @Override
-    public Rol updateRol(Long rolId, UpdateRolRequest request) {
-        Optional<Rol> rolOptional = iRolRepository.findById(rolId);
+    public RolEntity updateRol(Long rolId, UpdateRolRequest request) {
+        Optional<RolEntity> rolOptional = iRolRepository.findById(rolId);
         if (rolOptional.isEmpty()) {
             throw new RolNotFoundException();
         }
-        Rol rolToUpdate = rolOptional.get();
+        RolEntity rolToUpdate = rolOptional.get();
         if (request.rol() != null) {
-            Optional<Rol> rolOptionalVerification = iRolRepository.findByRol(request.rol());
+            Optional<RolEntity> rolOptionalVerification = iRolRepository.findByRol(request.rol());
             if (rolOptionalVerification.isPresent()) {
                 throw new RolUserAlreadyExistException();
             }

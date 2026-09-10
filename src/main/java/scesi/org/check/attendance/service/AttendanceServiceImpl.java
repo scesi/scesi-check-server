@@ -15,7 +15,7 @@ import scesi.org.check.event.model.repository.IEventRepository;
 import scesi.org.check.settings.model.entity.SettingEntity;
 import scesi.org.check.settings.model.exception.SettingNotFoundException;
 import scesi.org.check.settings.model.repository.ISettingsRepository;
-import scesi.org.check.user.model.entity.User;
+import scesi.org.check.user.model.entity.UserEntity;
 import scesi.org.check.user.model.repository.IUserRepository;
 
 import java.util.ArrayList;
@@ -50,11 +50,11 @@ public class AttendanceServiceImpl implements IAttendanceService {
         List<AttendanceCsvRow> attendanceCsvRows = iAttendanceCsvParser.processCsvFile(file);
         List<AttendanceEntity> attendanceEntities = new ArrayList<>();
         for (AttendanceCsvRow attendanceCsvRow : attendanceCsvRows) {
-            User user = iUserRepository.getReferenceById(attendanceCsvRow.getIdUser());
+            UserEntity userEntity = iUserRepository.getReferenceById(attendanceCsvRow.getIdUser());
             attendanceEntities.add(AttendanceEntity.builder()
                     .creationDate(attendanceCsvRow.getCreationDate())
                     .readerAccuracy(attendanceCsvRow.getReaderAccuracy())
-                    .user(user)
+                    .user(userEntity)
                     .build());
         }
 
