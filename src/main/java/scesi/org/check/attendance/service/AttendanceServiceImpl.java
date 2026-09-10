@@ -1,6 +1,7 @@
 package scesi.org.check.attendance.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import scesi.org.check.attendance.model.entity.AttendanceEntity;
 import scesi.org.check.attendance.model.repository.IAttendanceRepository;
@@ -44,6 +45,7 @@ public class AttendanceServiceImpl implements IAttendanceService {
     }
 
     @Override
+    @Transactional
     public Boolean saveAttendancesFromCSV(MultipartFile file) {
         List<AttendanceCsvRow> attendanceCsvRows = iAttendanceCsvParser.processCsvFile(file);
         List<AttendanceEntity> attendanceEntities = new ArrayList<>();
@@ -64,6 +66,7 @@ public class AttendanceServiceImpl implements IAttendanceService {
         for (IAttendanceRule iAttendanceRule : iAttendanceRules) {
             iAttendanceRule.apply(attendanceContext);
         }
+        for(AttendanceEntity attendance : attendanceEntities) attendance.setEvent(event);
         iAttendanceRepository.saveAll(attendanceEntities);
         return true;
     }

@@ -41,6 +41,6 @@ public class AttendanceEntity {
 
     @PrePersist
     public void prePersistentEntity() {
-        this.creationDate = Instant.now();
+        if (this.creationDate == null) this.creationDate = Instant.now();
     }
 }
