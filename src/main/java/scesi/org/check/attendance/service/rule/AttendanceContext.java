@@ -2,13 +2,13 @@ package scesi.org.check.attendance.service.rule;
 
 import scesi.org.check.attendance.model.entity.AttendanceEntity;
 import scesi.org.check.event.model.entity.EventEntity;
-import scesi.org.check.settings.model.entity.Setting;
+import scesi.org.check.settings.model.entity.SettingEntity;
 
 import java.util.List;
 
 public record AttendanceContext(
         EventEntity event,
-        Setting setting,
+        SettingEntity settingEntity,
         List<AttendanceEntity> attendanceEntities
 ) {
 }

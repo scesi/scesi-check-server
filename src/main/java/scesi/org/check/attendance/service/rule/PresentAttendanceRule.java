@@ -24,7 +24,7 @@ public class PresentAttendanceRule implements IAttendanceRule{
             Instant attendanceTime = attendance.getCreationDate();
             Instant toleranceTime = context.event()
                     .getStartTime()
-                    .plus(Duration.ofMinutes(context.setting().getToleranceTimeMinutes()));
+                    .plus(Duration.ofMinutes(context.settingEntity().getToleranceTimeMinutes()));
 
             if(attendanceTime.isBefore(toleranceTime)){
                 attendance.setTypeAttendance(present);

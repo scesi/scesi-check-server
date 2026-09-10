@@ -4,7 +4,7 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import scesi.org.check.settings.model.entity.Setting;
+import scesi.org.check.settings.model.entity.SettingEntity;
 import scesi.org.check.settings.model.repository.ISettingsRepository;
 
 import java.math.BigDecimal;
@@ -22,7 +22,7 @@ public class SettingSeed implements ApplicationRunner {
     @Override
     public void run(@NonNull ApplicationArguments args) {
         if (iSettingsRepository.count() == 0) {
-            iSettingsRepository.save(Setting.builder()
+            iSettingsRepository.save(SettingEntity.builder()
                     .id(1)
                     .absenceCost(BigDecimal.TWO)
                     .lateArrivalCost(BigDecimal.valueOf(20))

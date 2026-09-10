@@ -9,7 +9,7 @@ import scesi.org.check.latefee.model.repository.ILateFeeRepository;
 import scesi.org.check.latefee.model.repository.ITypeLateFeeRepository;
 import scesi.org.check.latefee.service.task.rule.ILateFeeTaskRule;
 import scesi.org.check.latefee.service.task.rule.LateFeeTaskContext;
-import scesi.org.check.settings.model.entity.Setting;
+import scesi.org.check.settings.model.entity.SettingEntity;
 import scesi.org.check.settings.model.exception.SettingNotFoundException;
 import scesi.org.check.settings.model.repository.ISettingsRepository;
 
@@ -37,7 +37,7 @@ public class LateFeeTask {
     @Scheduled(cron = "@monthly")
     public void generateMonthlyLateFees() {
         TypeLateFeeEntity notPayedType = iTypeLateFeeRepository.getReferenceById(2L);
-        Setting settings = iSettingsRepository.findById(1L).orElseThrow(SettingNotFoundException::new);
+        SettingEntity settings = iSettingsRepository.findById(1L).orElseThrow(SettingNotFoundException::new);
         List<LateFeeEntity> lateFeesToGenerate = new ArrayList<>();
         for (ILateFeeTaskRule iLateFeeTaskRule : iLateFeeTaskRules) {
             iLateFeeTaskRule.apply(new LateFeeTaskContext(settings, lateFeesToGenerate));

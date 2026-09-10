@@ -13,7 +13,7 @@ import java.time.Instant;
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
-public class Setting {
+public class SettingEntity {
     @Id
     private long id;
 
