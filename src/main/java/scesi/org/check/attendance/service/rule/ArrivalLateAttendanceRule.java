@@ -27,8 +27,8 @@ public class ArrivalLateAttendanceRule implements IAttendanceRule {
         for(AttendanceEntity attendance: context.attendanceEntities()){
             Instant attendanceTime = attendance.getCreationDate();
             Instant eventTime = context.event().getStartTime();
-            Instant absenceTime = eventTime.plus(Duration.ofMinutes(context.setting().getAbsenceThresholdMinutes()));
-            Instant toleranceTime = eventTime.plus(Duration.ofMinutes(context.setting().getToleranceTimeMinutes()));
+            Instant absenceTime = eventTime.plus(Duration.ofMinutes(context.settingEntity().getAbsenceThresholdMinutes()));
+            Instant toleranceTime = eventTime.plus(Duration.ofMinutes(context.settingEntity().getToleranceTimeMinutes()));
 
             if((attendanceTime.isAfter(toleranceTime) || attendanceTime.equals(toleranceTime))
                 && attendanceTime.isBefore(absenceTime)){

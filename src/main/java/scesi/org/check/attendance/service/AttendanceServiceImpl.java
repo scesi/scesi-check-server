@@ -12,7 +12,7 @@ import scesi.org.check.attendance.service.rule.IAttendanceRule;
 import scesi.org.check.event.model.entity.EventEntity;
 import scesi.org.check.event.model.exception.EventNotFoundException;
 import scesi.org.check.event.model.repository.IEventRepository;
-import scesi.org.check.settings.model.entity.Setting;
+import scesi.org.check.settings.model.entity.SettingEntity;
 import scesi.org.check.settings.model.exception.SettingNotFoundException;
 import scesi.org.check.settings.model.repository.ISettingsRepository;
 import scesi.org.check.user.model.entity.User;
@@ -60,9 +60,9 @@ public class AttendanceServiceImpl implements IAttendanceService {
 
         EventEntity event = iEventRepository.findFirstByOrderByStartTimeDesc()
                 .orElseThrow(EventNotFoundException::new);
-        Setting setting = iSettingsRepository.findById(1L)
+        SettingEntity settingEntity = iSettingsRepository.findById(1L)
                 .orElseThrow(SettingNotFoundException::new);
-        AttendanceContext attendanceContext = new AttendanceContext(event,setting, attendanceEntities);
+        AttendanceContext attendanceContext = new AttendanceContext(event, settingEntity, attendanceEntities);
         for (IAttendanceRule iAttendanceRule : iAttendanceRules) {
             iAttendanceRule.apply(attendanceContext);
         }

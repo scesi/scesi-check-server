@@ -33,7 +33,7 @@ public class AbsenceAttendanceRule implements IAttendanceRule {
         for(AttendanceEntity attendance: context.attendanceEntities()){
             Instant attendanceTime = attendance.getCreationDate();
             Instant eventTime = context.event().getStartTime();
-            Instant absenceTime = eventTime.plus(Duration.ofMinutes(context.setting().getAbsenceThresholdMinutes()));
+            Instant absenceTime = eventTime.plus(Duration.ofMinutes(context.settingEntity().getAbsenceThresholdMinutes()));
             idUser.add(attendance.getUser().getId());
             if(attendanceTime.isAfter(absenceTime) || attendanceTime.equals(absenceTime)){
                 attendance.setTypeAttendance(absence);
