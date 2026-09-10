@@ -37,4 +37,4 @@ out/
 .vscode/
 .env*
 !.env.example
-./database-pg
+/database-pg/
