@@ -25,7 +25,6 @@ public class AttendanceEntity {
     @Column(nullable = false)
     private Instant creationDate;
 
-    @Column(nullable = false)
     private String readerAccuracy;
 
     @ManyToOne
@@ -37,11 +36,11 @@ public class AttendanceEntity {
     private EventEntity event;
 
     @ManyToOne
-    @JoinColumn(name = "type_attendance_id", nullable = false)
+    @JoinColumn(name = "type_attendance_id")
     private TypeAttendanceEntity typeAttendance;
 
     @PrePersist
     public void prePersistentEntity() {
-        this.creationDate = Instant.now();
+        if (this.creationDate == null) this.creationDate = Instant.now();
     }
 }

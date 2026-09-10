@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface IEventRepository extends JpaRepository<EventEntity, Long> {
     Optional<EventEntity> findByTitle(String title);
+    Optional<EventEntity> findFirstByOrderByStartTimeDesc();
 }

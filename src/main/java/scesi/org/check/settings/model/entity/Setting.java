@@ -1,9 +1,6 @@
 package scesi.org.check.settings.model.entity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.math.BigDecimal;
 
@@ -12,15 +9,17 @@ import java.math.BigDecimal;
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class Setting {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(nullable = false, precision = 8, scale = 2)
     private BigDecimal absenceCost;
     @Column(nullable = false, precision = 8, scale = 2)
     private BigDecimal lateArrivalCost;
-    private int toleranceTime;
-    private int absenceThreshold;
+    @Column(nullable = false)
+    private int toleranceTimeMinutes;
+    @Column(nullable = false)
+    private int absenceThresholdMinutes;
 }
