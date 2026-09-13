@@ -1,4 +1,4 @@
-package scesi.org.check.core.model.service;
+package scesi.org.check.core.service;
 
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
@@ -6,7 +6,7 @@ import org.thymeleaf.context.Context;
 
 import java.util.Map;
 
-@Service
+
 public class TemplateService {
 
     private final TemplateEngine templateEngine;

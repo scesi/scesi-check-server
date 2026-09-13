@@ -8,7 +8,7 @@ import scesi.org.check.latefee.model.exception.LateFeeNotFoundException;
 import scesi.org.check.latefee.model.projection.ILateFeeProjection;
 import scesi.org.check.latefee.model.repository.ILateFeeRepository;
 import scesi.org.check.latefee.model.repository.ITypeLateFeeRepository;
-import scesi.org.check.rol.controller.ILateFeeService;
+import scesi.org.check.latefee.model.output.LateFeeReportOutput;
 
 import java.util.List;
 
@@ -36,5 +36,10 @@ public class LateFeeServiceImpl implements ILateFeeService {
         latefeeToChange.setTypeLateFeeEntity(typeLateFee);
         iLateFeeRepository.save(latefeeToChange);
         return true;
+    }
+
+    @Override
+    public LateFeeReportOutput getLateFeeNotPayedReport() {
+        return null;
     }
 }

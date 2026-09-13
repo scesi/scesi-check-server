@@ -1,4 +1,4 @@
-package scesi.org.check.core.model.service;
+package scesi.org.check.core.service;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
