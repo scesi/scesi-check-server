@@ -1,12 +1,12 @@
 package scesi.org.check.latefee.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import scesi.org.check.core.model.response.StandardResponse;
 import scesi.org.check.latefee.model.projection.ILateFeeProjection;
+import scesi.org.check.latefee.model.output.LateFeeReportOutput;
 import scesi.org.check.latefee.model.response.LateFeeResponse;
-import scesi.org.check.rol.controller.ILateFeeService;
+import scesi.org.check.latefee.service.ILateFeeService;
 
 import java.util.List;
 
@@ -52,5 +52,17 @@ public class LateFeeController {
                 .typeLateFeeEntity(lateFee.getTypeLateFee())
                 .attendanceId(lateFee.getAttendanceId())
                 .build();
+    }
+
+    @GetMapping(value = "/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    public ResponseEntity<byte[]> getLateFeeNotPayedReport() {
+        LateFeeReportOutput pdfReport = iLateFeeService.getLateFeeNotPayedReport();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDisposition(ContentDisposition
+                .attachment()
+                .filename("Reporte Multas Mes " + pdfReport.period().getMonthValue() + ".pdf").build());
+        headers.setContentLength(pdfReport.content().length);
+        return ResponseEntity.status(HttpStatus.OK).headers(headers).body(pdfReport.content());
     }
 }

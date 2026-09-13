@@ -1,4 +1,4 @@
-package scesi.org.check.core.model.service;
+package scesi.org.check.core.service;
 
 import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
