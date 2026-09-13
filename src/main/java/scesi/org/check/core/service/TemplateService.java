@@ -6,7 +6,7 @@ import org.thymeleaf.context.Context;
 
 import java.util.Map;
 
-
+@Service
 public class TemplateService {
 
     private final TemplateEngine templateEngine;

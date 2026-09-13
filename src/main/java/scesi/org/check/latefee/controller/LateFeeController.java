@@ -6,7 +6,7 @@ import scesi.org.check.core.model.response.StandardResponse;
 import scesi.org.check.latefee.model.projection.ILateFeeProjection;
 import scesi.org.check.latefee.model.output.LateFeeReportOutput;
 import scesi.org.check.latefee.model.response.LateFeeResponse;
-import scesi.org.check.latefee.service.task.ILateFeeService;
+import scesi.org.check.latefee.service.ILateFeeService;
 
 import java.util.List;
 

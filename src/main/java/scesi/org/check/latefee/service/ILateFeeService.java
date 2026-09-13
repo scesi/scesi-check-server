@@ -1,4 +1,4 @@
-package scesi.org.check.latefee.service.task;
+package scesi.org.check.latefee.service;
 
 import scesi.org.check.latefee.model.projection.ILateFeeProjection;
 import scesi.org.check.latefee.model.output.LateFeeReportOutput;
