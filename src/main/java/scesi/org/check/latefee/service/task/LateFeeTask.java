@@ -1,10 +1,13 @@
 package scesi.org.check.latefee.service.task;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import scesi.org.check.latefee.model.entity.LateFeeEntity;
 import scesi.org.check.latefee.model.entity.TypeLateFeeEntity;
+import scesi.org.check.latefee.model.event.LateFeeGeneratedEvent;
+import scesi.org.check.latefee.model.projection.ILateFeeNotificationProjection;
 import scesi.org.check.latefee.model.repository.ILateFeeRepository;
 import scesi.org.check.latefee.model.repository.ITypeLateFeeRepository;
 import scesi.org.check.latefee.service.task.rule.ILateFeeTaskRule;
@@ -22,15 +25,17 @@ public class LateFeeTask {
     private final ITypeLateFeeRepository iTypeLateFeeRepository;
     private final ILateFeeRepository iLateFeeRepository;
     private final List<ILateFeeTaskRule> iLateFeeTaskRules;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public LateFeeTask(ISettingsRepository iSettingsRepository,
                        ITypeLateFeeRepository iTypeLateFeeRepository,
                        ILateFeeRepository iLateFeeRepository,
-                       List<ILateFeeTaskRule> iLateFeeTaskRules) {
+                       List<ILateFeeTaskRule> iLateFeeTaskRules, ApplicationEventPublisher applicationEventPublisher) {
         this.iSettingsRepository = iSettingsRepository;
         this.iTypeLateFeeRepository = iTypeLateFeeRepository;
         this.iLateFeeRepository = iLateFeeRepository;
         this.iLateFeeTaskRules = iLateFeeTaskRules;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @Transactional
@@ -45,6 +50,11 @@ public class LateFeeTask {
         for (LateFeeEntity lateFee : lateFeesToGenerate) {
             lateFee.setTypeLateFeeEntity(notPayedType);
         }
-        iLateFeeRepository.saveAll(lateFeesToGenerate);
+        List<LateFeeEntity> lateFeesSaved = iLateFeeRepository.saveAll(lateFeesToGenerate);
+
+        List<Long> feeIds = lateFeesSaved.stream().map(LateFeeEntity::getId).toList();
+        List<ILateFeeNotificationProjection> notifications = iLateFeeRepository.findNotificationDataByFeeIds(feeIds);
+
+        applicationEventPublisher.publishEvent(new LateFeeGeneratedEvent(notifications));
     }
 }
