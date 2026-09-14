@@ -38,7 +38,7 @@ public interface ILateFeeRepository extends JpaRepository<LateFeeEntity, Long> {
 
 
     @Query("""
-            SELECT 
+            SELECT
                 us.name,
                 us.lastName,
                 us.email,

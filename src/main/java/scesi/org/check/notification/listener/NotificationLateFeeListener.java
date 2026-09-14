@@ -12,7 +12,6 @@ import scesi.org.check.latefee.model.projection.ILateFeeNotificationProjection;
 import scesi.org.check.notification.model.exception.NotificationLateFeeListenerException;
 
 import java.time.Instant;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
