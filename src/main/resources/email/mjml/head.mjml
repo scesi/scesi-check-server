@@ -1,0 +1,7 @@
+<mj-head>
+    <mj-title>{{email_title}}</mj-title>
+    <mj-font name="Poppins" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" />
+    <mj-attributes>
+        <mj-all font-family="Poppins, Arial, sans-serif"></mj-all>
+    </mj-attributes>
+</mj-head>%

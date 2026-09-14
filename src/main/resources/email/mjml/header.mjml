@@ -1,0 +1,25 @@
+<mj-section padding="0">
+    <mj-column width="25%" padding="0" vertical-align="middle">
+        <mj-image
+                align="center"
+                width="50px"
+                padding="10px 0 10px 20px"
+                src="https://i.imgur.com/npTbdR8.png"
+        />
+    </mj-column>
+    <mj-column width="75%" vertical-align="middle">
+        <mj-text align="center" color="#D83746" font-size="28px" font-weight="bold"
+        >Multa generada
+        </mj-text
+        >
+    </mj-column>
+</mj-section>
+<mj-section>
+    <mj-column>
+        <mj-divider
+                border-color="#D83746"
+                border-width="3px"
+                border-style="solid"
+        />
+    </mj-column>
+</mj-section>
