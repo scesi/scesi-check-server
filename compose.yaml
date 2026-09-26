@@ -9,3 +9,9 @@ services:
       - '${DB_PORT}:${DB_PORT}'
     volumes:
       - './database-pg:/var/lib/postgresql'
+
+  mqtt-broker:
+    image: 'eclipse-mosquitto:2.1.2-alpine'
+    ports:
+      - '1883:1883'
+    restart: unless-stopped
