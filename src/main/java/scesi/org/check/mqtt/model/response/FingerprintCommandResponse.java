@@ -7,14 +7,16 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record FingerprintCommandResponse(
-        @JsonProperty("action") String action,
+        String action,
+
         @JsonProperty("user_id") Integer userId,
-        @JsonProperty("finger") Integer finger,
-        @JsonProperty("ok") Boolean ok,
-        @JsonProperty("detail") String detail,
-        @JsonProperty("count") Integer count,
-        @JsonProperty("max") Integer max,
-        @JsonProperty("fingers") List<Integer> fingers
+
+        Integer finger,
+        Boolean ok,
+        String detail,
+        Integer count,
+        Integer max,
+        List<Integer> fingers
 ) {
     public boolean isSuccess() {
         return Boolean.TRUE.equals(ok);
