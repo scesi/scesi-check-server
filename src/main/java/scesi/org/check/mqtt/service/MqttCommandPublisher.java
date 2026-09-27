@@ -7,7 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Service;
-import scesi.org.check.mqtt.model.request.MqttCommandRequest;
+import scesi.org.check.mqtt.model.request.FingerprintCommandRequest;
+import scesi.org.check.mqtt.model.request.WifiCommandRequest;
 
 @Slf4j
 @Service
@@ -18,40 +19,34 @@ public class MqttCommandPublisher {
     private final ObjectMapper objectMapper;
 
     public void publishEnroll(Integer userId, Integer finger) {
-        MqttCommandRequest request = MqttCommandRequest.builder()
-                .action("enroll")
-                .userId(userId)
-                .finger(finger)
-                .build();
-        publish(request);
+        publish(FingerprintCommandRequest.enroll(userId, finger));
     }
 
     public void publishDeleteFinger(Integer userId, Integer finger) {
-        MqttCommandRequest request = MqttCommandRequest.builder()
-                .action("delete")
-                .userId(userId)
-                .finger(finger)
-                .build();
-        publish(request);
+        publish(FingerprintCommandRequest.deleteFinger(userId, finger));
     }
 
     public void publishDeleteUser(Integer userId) {
-        MqttCommandRequest request = MqttCommandRequest.builder()
-                .action("delete")
-                .userId(userId)
-                .build();
-        publish(request);
+        publish(FingerprintCommandRequest.deleteUser(userId));
     }
 
     public void publishFingerList(Integer userId) {
-        MqttCommandRequest request = MqttCommandRequest.builder()
-                .action("finger_list")
-                .userId(userId)
-                .build();
-        publish(request);
+        publish(FingerprintCommandRequest.fingerList(userId));
     }
 
-    private void publish(MqttCommandRequest request) {
+    public void publishWifiAdd(String ssid, String pass) {
+        publish(WifiCommandRequest.add(ssid, pass));
+    }
+
+    public void publishWifiDelete(String ssid) {
+        publish(WifiCommandRequest.delete(ssid));
+    }
+
+    public void publishWifiList() {
+        publish(WifiCommandRequest.list());
+    }
+
+    private void publish(Object request) {
         try {
             String json = objectMapper.writeValueAsString(request);
             mqttOutbound.handleMessage(MessageBuilder.withPayload(json).build());

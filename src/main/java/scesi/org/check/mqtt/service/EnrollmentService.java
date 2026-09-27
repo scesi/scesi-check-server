@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import scesi.org.check.mqtt.model.exception.EnrollmentException;
-import scesi.org.check.mqtt.model.response.MqttCommandResponse;
+import scesi.org.check.mqtt.model.response.FingerprintCommandResponse;
+import scesi.org.check.mqtt.model.response.WifiCommandResponse;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -23,15 +24,16 @@ public class EnrollmentService {
     private static final long ENROLL_TIMEOUT_MS = 15_000;
     private static final long DELETE_TIMEOUT_MS = 5_000;
     private static final long FINGER_LIST_TIMEOUT_MS = 5_000;
+    private static final long WIFI_TIMEOUT_MS = 5_000;
     private static final int MAX_FINGERS_PER_USER = 2;
 
-    public MqttCommandResponse enroll(Integer userId) {
-        MqttCommandResponse fingerList = fingerList(userId);
-        if (!fingerList.getOk()) {
-            throw new EnrollmentException("Failed to get finger list: " + fingerList.getDetail());
+    public FingerprintCommandResponse enroll(Integer userId) {
+        FingerprintCommandResponse fingerList = fingerList(userId);
+        if (!fingerList.isSuccess()) {
+            throw new EnrollmentException("Failed to get finger list: " + fingerList.detail());
         }
 
-        List<Integer> usedFingers = fingerList.getFingers();
+        List<Integer> usedFingers = fingerList.fingers();
         Integer nextFinger = findNextAvailableFinger(usedFingers);
 
         if (nextFinger == null) {
@@ -41,9 +43,9 @@ public class EnrollmentService {
         return enroll(userId, nextFinger);
     }
 
-    public MqttCommandResponse enroll(Integer userId, Integer finger) {
+    public FingerprintCommandResponse enroll(Integer userId, Integer finger) {
         String key = "enroll:" + userId + ":" + finger;
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, ENROLL_TIMEOUT_MS);
+        CompletableFuture<FingerprintCommandResponse> future = responseRegistry.registerFingerprint(key, ENROLL_TIMEOUT_MS);
         publisher.publishEnroll(userId, finger);
 
         try {
@@ -61,9 +63,9 @@ public class EnrollmentService {
         }
     }
 
-    public MqttCommandResponse fingerList(Integer userId) {
+    public FingerprintCommandResponse fingerList(Integer userId) {
         String key = "finger_list:" + userId;
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, FINGER_LIST_TIMEOUT_MS);
+        CompletableFuture<FingerprintCommandResponse> future = responseRegistry.registerFingerprint(key, FINGER_LIST_TIMEOUT_MS);
         publisher.publishFingerList(userId);
 
         try {
@@ -81,9 +83,9 @@ public class EnrollmentService {
         }
     }
 
-    public MqttCommandResponse deleteFinger(Integer userId, Integer finger) {
+    public FingerprintCommandResponse deleteFinger(Integer userId, Integer finger) {
         String key = "delete:" + userId + ":" + finger;
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, DELETE_TIMEOUT_MS);
+        CompletableFuture<FingerprintCommandResponse> future = responseRegistry.registerFingerprint(key, DELETE_TIMEOUT_MS);
         publisher.publishDeleteFinger(userId, finger);
 
         try {
@@ -101,9 +103,9 @@ public class EnrollmentService {
         }
     }
 
-    public MqttCommandResponse deleteUser(Integer userId) {
+    public FingerprintCommandResponse deleteUser(Integer userId) {
         String key = "delete:" + userId + ":0";
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, DELETE_TIMEOUT_MS);
+        CompletableFuture<FingerprintCommandResponse> future = responseRegistry.registerFingerprint(key, DELETE_TIMEOUT_MS);
         publisher.publishDeleteUser(userId);
 
         try {
@@ -118,6 +120,66 @@ public class EnrollmentService {
         } catch (TimeoutException e) {
             log.error("Delete user timeout for user {}", userId);
             throw new EnrollmentException("Delete user timeout after " + DELETE_TIMEOUT_MS + "ms", e);
+        }
+    }
+
+    public WifiCommandResponse wifiAdd(String ssid, String pass) {
+        String key = "wifi_add:" + ssid;
+        CompletableFuture<WifiCommandResponse> future = responseRegistry.registerWifi(key, WIFI_TIMEOUT_MS);
+        publisher.publishWifiAdd(ssid, pass);
+
+        try {
+            return future.get(WIFI_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("WiFi add interrupted for ssid {}", ssid, e);
+            throw new EnrollmentException("WiFi add interrupted", e);
+        } catch (ExecutionException e) {
+            log.error("WiFi add execution failed for ssid {}", ssid, e);
+            throw new EnrollmentException("WiFi add failed: " + e.getCause().getMessage(), e);
+        } catch (TimeoutException e) {
+            log.error("WiFi add timeout for ssid {}", ssid);
+            throw new EnrollmentException("WiFi add timeout after " + WIFI_TIMEOUT_MS + "ms", e);
+        }
+    }
+
+    public WifiCommandResponse wifiDelete(String ssid) {
+        String key = "wifi_delete:" + ssid;
+        CompletableFuture<WifiCommandResponse> future = responseRegistry.registerWifi(key, WIFI_TIMEOUT_MS);
+        publisher.publishWifiDelete(ssid);
+
+        try {
+            return future.get(WIFI_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("WiFi delete interrupted for ssid {}", ssid, e);
+            throw new EnrollmentException("WiFi delete interrupted", e);
+        } catch (ExecutionException e) {
+            log.error("WiFi delete execution failed for ssid {}", ssid, e);
+            throw new EnrollmentException("WiFi delete failed: " + e.getCause().getMessage(), e);
+        } catch (TimeoutException e) {
+            log.error("WiFi delete timeout for ssid {}", ssid);
+            throw new EnrollmentException("WiFi delete timeout after " + WIFI_TIMEOUT_MS + "ms", e);
+        }
+    }
+
+    public WifiCommandResponse wifiList() {
+        String key = "wifi_list:0";
+        CompletableFuture<WifiCommandResponse> future = responseRegistry.registerWifi(key, WIFI_TIMEOUT_MS);
+        publisher.publishWifiList();
+
+        try {
+            return future.get(WIFI_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            log.error("WiFi list interrupted", e);
+            throw new EnrollmentException("WiFi list interrupted", e);
+        } catch (ExecutionException e) {
+            log.error("WiFi list execution failed", e);
+            throw new EnrollmentException("WiFi list failed: " + e.getCause().getMessage(), e);
+        } catch (TimeoutException e) {
+            log.error("WiFi list timeout");
+            throw new EnrollmentException("WiFi list timeout after " + WIFI_TIMEOUT_MS + "ms", e);
         }
     }
 

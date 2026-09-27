@@ -2,7 +2,8 @@ package scesi.org.check.mqtt.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import scesi.org.check.mqtt.model.response.MqttCommandResponse;
+import scesi.org.check.mqtt.model.response.FingerprintCommandResponse;
+import scesi.org.check.mqtt.model.response.WifiCommandResponse;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -13,10 +14,10 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class MqttResponseRegistry {
 
-    private final Map<String, CompletableFuture<MqttCommandResponse>> pendingResponses = new ConcurrentHashMap<>();
+    private final Map<String, CompletableFuture<?>> pendingResponses = new ConcurrentHashMap<>();
 
-    public CompletableFuture<MqttCommandResponse> register(String correlationKey, long timeoutMs) {
-        CompletableFuture<MqttCommandResponse> future = new CompletableFuture<>();
+    public CompletableFuture<FingerprintCommandResponse> registerFingerprint(String correlationKey, long timeoutMs) {
+        CompletableFuture<FingerprintCommandResponse> future = new CompletableFuture<>();
         pendingResponses.put(correlationKey, future);
 
         future.orTimeout(timeoutMs, TimeUnit.MILLISECONDS)
@@ -25,23 +26,51 @@ public class MqttResponseRegistry {
         return future;
     }
 
-    public void complete(MqttCommandResponse response) {
-        String key = buildKey(response);
-        CompletableFuture<MqttCommandResponse> future = pendingResponses.remove(key);
+    public CompletableFuture<WifiCommandResponse> registerWifi(String correlationKey, long timeoutMs) {
+        CompletableFuture<WifiCommandResponse> future = new CompletableFuture<>();
+        pendingResponses.put(correlationKey, future);
+
+        future.orTimeout(timeoutMs, TimeUnit.MILLISECONDS)
+                .whenComplete((_, __) -> pendingResponses.remove(correlationKey));
+
+        return future;
+    }
+
+    public void completeFingerprint(FingerprintCommandResponse response) {
+        String key = buildFingerprintKey(response);
+        @SuppressWarnings("unchecked")
+        CompletableFuture<FingerprintCommandResponse> future = (CompletableFuture<FingerprintCommandResponse>) pendingResponses.remove(key);
         if (future != null) {
             future.complete(response);
-            log.debug("Completed response for key: {}", key);
+            log.debug("Completed fingerprint response for key: {}", key);
         } else {
             log.debug("No pending future for key: {} (may have timed out)", key);
         }
     }
 
-    private String buildKey(MqttCommandResponse response) {
-        int userId = response.getUserId() != null ? response.getUserId() : 0;
-        if ("finger_list".equals(response.getAction())) {
-            return response.getAction() + ":" + userId;
+    public void completeWifi(WifiCommandResponse response) {
+        String key = buildWifiKey(response);
+        @SuppressWarnings("unchecked")
+        CompletableFuture<WifiCommandResponse> future = (CompletableFuture<WifiCommandResponse>) pendingResponses.remove(key);
+        if (future != null) {
+            future.complete(response);
+            log.debug("Completed WiFi response for key: {}", key);
+        } else {
+            log.debug("No pending future for key: {} (may have timed out)", key);
         }
-        int finger = response.getFinger() != null ? response.getFinger() : 0;
-        return response.getAction() + ":" + userId + ":" + finger;
+    }
+
+    private String buildFingerprintKey(FingerprintCommandResponse response) {
+        int userId = response.userId() != null ? response.userId() : 0;
+        if ("finger_list".equals(response.action())) {
+            return response.action() + ":" + userId;
+        }
+        int finger = response.finger() != null ? response.finger() : 0;
+        return response.action() + ":" + userId + ":" + finger;
+    }
+
+    private String buildWifiKey(WifiCommandResponse response) {
+        String ssid = response.ssid() != null ? response.ssid() : "0";
+        return response.action() + ":" + ssid;
     }
 }
