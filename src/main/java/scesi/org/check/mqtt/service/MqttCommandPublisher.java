@@ -51,6 +51,30 @@ public class MqttCommandPublisher {
         publish(request);
     }
 
+    public void publishWifiAdd(String ssid, String pass) {
+        MqttCommandRequest request = MqttCommandRequest.builder()
+                .action("wifi_add")
+                .ssid(ssid)
+                .pass(pass)
+                .build();
+        publish(request);
+    }
+
+    public void publishWifiDelete(String ssid) {
+        MqttCommandRequest request = MqttCommandRequest.builder()
+                .action("wifi_delete")
+                .ssid(ssid)
+                .build();
+        publish(request);
+    }
+
+    public void publishWifiList() {
+        MqttCommandRequest request = MqttCommandRequest.builder()
+                .action("wifi_list")
+                .build();
+        publish(request);
+    }
+
     private void publish(MqttCommandRequest request) {
         try {
             String json = objectMapper.writeValueAsString(request);
