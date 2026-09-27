@@ -38,6 +38,9 @@ public class MqttResponseRegistry {
 
     private String buildKey(MqttCommandResponse response) {
         int userId = response.getUserId() != null ? response.getUserId() : 0;
+        if ("finger_list".equals(response.getAction())) {
+            return response.getAction() + ":" + userId;
+        }
         int finger = response.getFinger() != null ? response.getFinger() : 0;
         return response.getAction() + ":" + userId + ":" + finger;
     }

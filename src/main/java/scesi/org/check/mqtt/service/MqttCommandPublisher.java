@@ -43,6 +43,14 @@ public class MqttCommandPublisher {
         publish(request);
     }
 
+    public void publishFingerList(Integer userId) {
+        MqttCommandRequest request = MqttCommandRequest.builder()
+                .action("finger_list")
+                .userId(userId)
+                .build();
+        publish(request);
+    }
+
     private void publish(MqttCommandRequest request) {
         try {
             String json = objectMapper.writeValueAsString(request);
