@@ -1,4 +1,4 @@
-package scesi.org.check.latefee.model.entity;
+package scesi.org.check.latefee.model.exception;
 
 public class ReportGenerationErrorException extends RuntimeException {
     public static final String DEFAULT_MESSAGE = "Report generation error";
