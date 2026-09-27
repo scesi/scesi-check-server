@@ -19,10 +19,9 @@ public class FingerprintController {
 
     @PostMapping("/{userId}/fingerprint")
     public ResponseEntity<StandardResponse<MqttCommandResponse>> enrollFingerprint(
-            @PathVariable("userId") final Integer userId,
-            @RequestParam("finger") final Integer finger
+            @PathVariable("userId") final Integer userId
     ) {
-        MqttCommandResponse response = enrollmentService.enroll(userId, finger);
+        MqttCommandResponse response = enrollmentService.enroll(userId);
         StandardResponse<MqttCommandResponse> standardResponse = StandardResponse.<MqttCommandResponse>builder()
                 .statusCode(HttpStatus.CREATED.value())
                 .message("Fingerprint enrollment completed")
