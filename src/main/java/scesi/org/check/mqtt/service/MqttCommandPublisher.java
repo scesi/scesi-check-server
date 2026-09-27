@@ -26,6 +26,31 @@ public class MqttCommandPublisher {
         publish(request);
     }
 
+    public void publishDeleteFinger(Integer userId, Integer finger) {
+        MqttCommandRequest request = MqttCommandRequest.builder()
+                .action("delete")
+                .userId(userId)
+                .finger(finger)
+                .build();
+        publish(request);
+    }
+
+    public void publishDeleteUser(Integer userId) {
+        MqttCommandRequest request = MqttCommandRequest.builder()
+                .action("delete")
+                .userId(userId)
+                .build();
+        publish(request);
+    }
+
+    public void publishFingerList(Integer userId) {
+        MqttCommandRequest request = MqttCommandRequest.builder()
+                .action("finger_list")
+                .userId(userId)
+                .build();
+        publish(request);
+    }
+
     private void publish(MqttCommandRequest request) {
         try {
             String json = objectMapper.writeValueAsString(request);

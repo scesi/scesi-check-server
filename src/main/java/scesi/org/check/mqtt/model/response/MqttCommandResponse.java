@@ -21,4 +21,7 @@ public class MqttCommandResponse {
     private String detail;
     private String ssid;
     private List<String> ssids;
+    private Integer count;
+    private Integer max;
+    private List<Integer> fingers;
 }
