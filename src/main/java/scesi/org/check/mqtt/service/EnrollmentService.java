@@ -4,7 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import scesi.org.check.mqtt.model.exception.EnrollmentException;
-import scesi.org.check.mqtt.model.response.MqttCommandResponse;
+import scesi.org.check.mqtt.model.response.FingerprintCommandResponse;
+import scesi.org.check.mqtt.model.response.WifiCommandResponse;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -26,13 +27,13 @@ public class EnrollmentService {
     private static final long WIFI_TIMEOUT_MS = 5_000;
     private static final int MAX_FINGERS_PER_USER = 2;
 
-    public MqttCommandResponse enroll(Integer userId) {
-        MqttCommandResponse fingerList = fingerList(userId);
-        if (!fingerList.getOk()) {
-            throw new EnrollmentException("Failed to get finger list: " + fingerList.getDetail());
+    public FingerprintCommandResponse enroll(Integer userId) {
+        FingerprintCommandResponse fingerList = fingerList(userId);
+        if (!fingerList.isSuccess()) {
+            throw new EnrollmentException("Failed to get finger list: " + fingerList.detail());
         }
 
-        List<Integer> usedFingers = fingerList.getFingers();
+        List<Integer> usedFingers = fingerList.fingers();
         Integer nextFinger = findNextAvailableFinger(usedFingers);
 
         if (nextFinger == null) {
@@ -42,9 +43,9 @@ public class EnrollmentService {
         return enroll(userId, nextFinger);
     }
 
-    public MqttCommandResponse enroll(Integer userId, Integer finger) {
+    public FingerprintCommandResponse enroll(Integer userId, Integer finger) {
         String key = "enroll:" + userId + ":" + finger;
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, ENROLL_TIMEOUT_MS);
+        CompletableFuture<FingerprintCommandResponse> future = responseRegistry.registerFingerprint(key, ENROLL_TIMEOUT_MS);
         publisher.publishEnroll(userId, finger);
 
         try {
@@ -62,9 +63,9 @@ public class EnrollmentService {
         }
     }
 
-    public MqttCommandResponse fingerList(Integer userId) {
+    public FingerprintCommandResponse fingerList(Integer userId) {
         String key = "finger_list:" + userId;
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, FINGER_LIST_TIMEOUT_MS);
+        CompletableFuture<FingerprintCommandResponse> future = responseRegistry.registerFingerprint(key, FINGER_LIST_TIMEOUT_MS);
         publisher.publishFingerList(userId);
 
         try {
@@ -82,9 +83,9 @@ public class EnrollmentService {
         }
     }
 
-    public MqttCommandResponse deleteFinger(Integer userId, Integer finger) {
+    public FingerprintCommandResponse deleteFinger(Integer userId, Integer finger) {
         String key = "delete:" + userId + ":" + finger;
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, DELETE_TIMEOUT_MS);
+        CompletableFuture<FingerprintCommandResponse> future = responseRegistry.registerFingerprint(key, DELETE_TIMEOUT_MS);
         publisher.publishDeleteFinger(userId, finger);
 
         try {
@@ -102,9 +103,9 @@ public class EnrollmentService {
         }
     }
 
-    public MqttCommandResponse deleteUser(Integer userId) {
+    public FingerprintCommandResponse deleteUser(Integer userId) {
         String key = "delete:" + userId + ":0";
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, DELETE_TIMEOUT_MS);
+        CompletableFuture<FingerprintCommandResponse> future = responseRegistry.registerFingerprint(key, DELETE_TIMEOUT_MS);
         publisher.publishDeleteUser(userId);
 
         try {
@@ -122,9 +123,9 @@ public class EnrollmentService {
         }
     }
 
-    public MqttCommandResponse wifiAdd(String ssid, String pass) {
+    public WifiCommandResponse wifiAdd(String ssid, String pass) {
         String key = "wifi_add:" + ssid;
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, WIFI_TIMEOUT_MS);
+        CompletableFuture<WifiCommandResponse> future = responseRegistry.registerWifi(key, WIFI_TIMEOUT_MS);
         publisher.publishWifiAdd(ssid, pass);
 
         try {
@@ -142,9 +143,9 @@ public class EnrollmentService {
         }
     }
 
-    public MqttCommandResponse wifiDelete(String ssid) {
+    public WifiCommandResponse wifiDelete(String ssid) {
         String key = "wifi_delete:" + ssid;
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, WIFI_TIMEOUT_MS);
+        CompletableFuture<WifiCommandResponse> future = responseRegistry.registerWifi(key, WIFI_TIMEOUT_MS);
         publisher.publishWifiDelete(ssid);
 
         try {
@@ -162,9 +163,9 @@ public class EnrollmentService {
         }
     }
 
-    public MqttCommandResponse wifiList() {
+    public WifiCommandResponse wifiList() {
         String key = "wifi_list:0";
-        CompletableFuture<MqttCommandResponse> future = responseRegistry.register(key, WIFI_TIMEOUT_MS);
+        CompletableFuture<WifiCommandResponse> future = responseRegistry.registerWifi(key, WIFI_TIMEOUT_MS);
         publisher.publishWifiList();
 
         try {

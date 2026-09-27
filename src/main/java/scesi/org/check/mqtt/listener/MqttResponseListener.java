@@ -7,7 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
-import scesi.org.check.mqtt.model.response.MqttCommandResponse;
+import scesi.org.check.mqtt.model.response.FingerprintCommandResponse;
+import scesi.org.check.mqtt.model.response.WifiCommandResponse;
 import scesi.org.check.mqtt.service.MqttResponseRegistry;
 
 @Slf4j
@@ -24,10 +25,20 @@ public class MqttResponseListener {
         log.debug("Received MQTT response: {}", payload);
 
         try {
-            MqttCommandResponse response = objectMapper.readValue(payload, MqttCommandResponse.class);
-            responseRegistry.complete(response);
+            String action = objectMapper.readTree(payload).get("action").asText();
+            if (isWifiAction(action)) {
+                WifiCommandResponse response = objectMapper.readValue(payload, WifiCommandResponse.class);
+                responseRegistry.completeWifi(response);
+            } else {
+                FingerprintCommandResponse response = objectMapper.readValue(payload, FingerprintCommandResponse.class);
+                responseRegistry.completeFingerprint(response);
+            }
         } catch (JsonProcessingException e) {
             log.error("Failed to parse MQTT response: {}", payload, e);
         }
+    }
+
+    private boolean isWifiAction(String action) {
+        return action.startsWith("wifi_");
     }
 }
