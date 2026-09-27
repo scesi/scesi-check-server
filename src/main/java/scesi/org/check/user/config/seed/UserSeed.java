@@ -3,7 +3,6 @@ package scesi.org.check.user.config.seed;
 import org.jspecify.annotations.NonNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import scesi.org.check.rol.model.enumerate.RoleEnum;
 import scesi.org.check.rol.model.repository.IRolRepository;
@@ -13,7 +12,6 @@ import scesi.org.check.user.model.repository.IUserRepository;
 import scesi.org.check.user.model.repository.IRolUserRepository;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -22,13 +20,11 @@ public class UserSeed implements ApplicationRunner {
     private final IUserRepository iUserRepository;
     private final IRolUserRepository iRolUserRepository;
     private final IRolRepository iRolRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserSeed(IUserRepository iUserRepository, IRolUserRepository iRolUserRepository, IRolRepository iRolRepository, PasswordEncoder passwordEncoder) {
+    public UserSeed(IUserRepository iUserRepository, IRolUserRepository iRolUserRepository, IRolRepository iRolRepository) {
         this.iUserRepository = iUserRepository;
         this.iRolUserRepository = iRolUserRepository;
         this.iRolRepository = iRolRepository;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -61,29 +57,12 @@ public class UserSeed implements ApplicationRunner {
                     .build();
             iUserRepository.save(bothRolesUser);
 
-            List<RolUserEntity> rolUsers = new ArrayList<>();
-            rolUsers.add(RolUserEntity.builder()
-                    .user(adminUser)
-                    .rol(adminRole)
-                    .creationDate(Instant.now())
-                    .build());
-            rolUsers.add(RolUserEntity.builder()
-                    .user(memberUser)
-                    .rol(memberRole)
-                    .creationDate(Instant.now())
-                    .build());
-            rolUsers.add(RolUserEntity.builder()
-                    .user(bothRolesUser)
-                    .rol(adminRole)
-                    .creationDate(Instant.now())
-                    .build());
-            rolUsers.add(RolUserEntity.builder()
-                    .user(bothRolesUser)
-                    .rol(memberRole)
-                    .creationDate(Instant.now())
-                    .build());
-
-            iRolUserRepository.saveAll(rolUsers);
+            iRolUserRepository.saveAll(List.of(
+                    RolUserEntity.builder().user(adminUser).rol(adminRole).creationDate(Instant.now()).build(),
+                    RolUserEntity.builder().user(memberUser).rol(memberRole).creationDate(Instant.now()).build(),
+                    RolUserEntity.builder().user(bothRolesUser).rol(adminRole).creationDate(Instant.now()).build(),
+                    RolUserEntity.builder().user(bothRolesUser).rol(memberRole).creationDate(Instant.now()).build()
+            ));
         }
     }
 }

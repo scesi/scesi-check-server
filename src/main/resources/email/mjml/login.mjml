@@ -1,0 +1,34 @@
+<mjml>
+    <mj-include path="./head.mjml"/>
+    <mj-body>
+        <mj-include path="./header-login.mjml"/>
+        <mj-section>
+            <mj-column>
+                <mj-text font-size="20px" font-weight="bold" color="#333333">
+                    Hola [[${name}]],
+                </mj-text>
+
+                <mj-text font-size="16px" color="#555555">
+                    Hemos recibido una solicitud de inicio de sesión para tu cuenta.
+                </mj-text>
+
+                <mj-divider border-color="#D83746" border-width="1px"/>
+
+                <mj-text font-size="16px" color="#555555">
+                    Haz clic en el siguiente botón para acceder al sistema:
+                </mj-text>
+
+                <mj-button background-color="#D83746" color="#ffffff" font-size="16px" font-weight="bold" href="[[${loginUrl}]]" padding="15px 30px" border-radius="5px">
+                    Iniciar Sesión
+                </mj-button>
+
+                <mj-spacer height="20px"/>
+
+                <mj-text font-size="14px" color="#999999">
+                    Si no solicitaste este acceso, puedes ignorar este correo. El enlace expira en 15 minutos.
+                </mj-text>
+            </mj-column>
+        </mj-section>
+        <mj-include path="./footer.mjml"/>
+    </mj-body>
+</mjml>
