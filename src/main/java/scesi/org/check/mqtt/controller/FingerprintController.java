@@ -8,30 +8,30 @@ import scesi.org.check.mqtt.model.response.MqttCommandResponse;
 import scesi.org.check.mqtt.service.EnrollmentService;
 
 @RestController
-@RequestMapping("/fingerprint")
-public class EnrollmentController {
+@RequestMapping("/user")
+public class FingerprintController {
 
     private final EnrollmentService enrollmentService;
 
-    public EnrollmentController(EnrollmentService enrollmentService) {
+    public FingerprintController(EnrollmentService enrollmentService) {
         this.enrollmentService = enrollmentService;
     }
 
-    @PostMapping("/enroll/{userId}/{finger}")
+    @PostMapping("/{userId}/fingerprint")
     public ResponseEntity<StandardResponse<MqttCommandResponse>> enrollFingerprint(
             @PathVariable("userId") final Integer userId,
-            @PathVariable("finger") final Integer finger
+            @RequestParam("finger") final Integer finger
     ) {
         MqttCommandResponse response = enrollmentService.enroll(userId, finger);
         StandardResponse<MqttCommandResponse> standardResponse = StandardResponse.<MqttCommandResponse>builder()
-                .statusCode(HttpStatus.OK.value())
+                .statusCode(HttpStatus.CREATED.value())
                 .message("Fingerprint enrollment completed")
                 .data(response)
                 .build();
-        return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(standardResponse);
     }
 
-    @DeleteMapping("/delete/{userId}/{finger}")
+    @DeleteMapping("/{userId}/fingerprint/{finger}")
     public ResponseEntity<StandardResponse<MqttCommandResponse>> deleteFingerprint(
             @PathVariable("userId") final Integer userId,
             @PathVariable("finger") final Integer finger
@@ -45,8 +45,8 @@ public class EnrollmentController {
         return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
     }
 
-    @DeleteMapping("/delete/{userId}")
-    public ResponseEntity<StandardResponse<MqttCommandResponse>> deleteUser(
+    @DeleteMapping("/{userId}/fingerprint")
+    public ResponseEntity<StandardResponse<MqttCommandResponse>> deleteUserFingerprints(
             @PathVariable("userId") final Integer userId
     ) {
         MqttCommandResponse response = enrollmentService.deleteUser(userId);

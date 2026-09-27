@@ -8,10 +8,10 @@ import scesi.org.check.core.model.response.StandardResponse;
 import scesi.org.check.mqtt.model.exception.EnrollmentException;
 
 @ControllerAdvice
-public class EnrollmentExceptionHandler {
+public class FingerprintExceptionHandler {
 
     @ExceptionHandler(EnrollmentException.class)
-    public ResponseEntity<StandardResponse<Object>> handleEnrollmentException(EnrollmentException ex) {
+    public ResponseEntity<StandardResponse<Object>> handleFingerprintException(EnrollmentException ex) {
         StandardResponse<Object> response = StandardResponse.builder()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR.value())
                 .message(ex.getMessage())
