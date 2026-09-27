@@ -6,10 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import scesi.org.check.auth.security.JwtUtil;
 import scesi.org.check.core.service.EmailService;
@@ -24,7 +21,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final IUserRepository iUserRepository;
     private final EmailService emailService;
@@ -64,7 +60,7 @@ public class AuthService {
     }
 
     public void refresh(HttpServletRequest request, HttpServletResponse response) {
-        String refreshToken = extractTokenFromCookie(request, "refresh_token");
+        String refreshToken = extractTokenFromCookie(request);
 
         if (refreshToken == null || !jwtUtil.isRefreshToken(refreshToken)) {
             throw new BadCredentialsException("Invalid refresh token");
@@ -144,10 +140,10 @@ public class AuthService {
         response.addCookie(refreshCookie);
     }
 
-    private String extractTokenFromCookie(HttpServletRequest request, String cookieName) {
+    private String extractTokenFromCookie(HttpServletRequest request) {
         if (request.getCookies() != null) {
             for (Cookie cookie : request.getCookies()) {
-                if (cookieName.equals(cookie.getName())) {
+                if ("refresh_token".equals(cookie.getName())) {
                     return cookie.getValue();
                 }
             }

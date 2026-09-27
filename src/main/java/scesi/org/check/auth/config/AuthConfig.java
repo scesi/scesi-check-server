@@ -45,15 +45,20 @@ public class AuthConfig {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.setContentType("application/json");
-                            response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"Authentication required\"}");
-                        })
+                        .authenticationEntryPoint(this::handleAuthenticationEntryPoint)
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    private void handleAuthenticationEntryPoint(jakarta.servlet.http.HttpServletRequest request,
+                                                 jakarta.servlet.http.HttpServletResponse response,
+                                                 org.springframework.security.core.AuthenticationException authException)
+            throws java.io.IOException {
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        response.setContentType("application/json");
+        response.getWriter().write("{\"error\":\"Unauthorized\",\"message\":\"Authentication required\"}");
     }
 
     @Bean

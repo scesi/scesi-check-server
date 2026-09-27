@@ -24,15 +24,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
+            jakarta.servlet.http.HttpServletRequest request,
+            jakarta.servlet.http.HttpServletResponse response,
+            jakarta.servlet.FilterChain filterChain
     ) throws ServletException, IOException {
         String accessToken = extractTokenFromCookie(request);
 
         if (accessToken != null && jwtUtil.isAccessToken(accessToken)) {
             String email = jwtUtil.extractEmail(accessToken);
-            List<String> roles = jwtUtil.extractRoles(accessToken);
 
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 if (jwtUtil.isTokenValid(accessToken, email)) {
