@@ -30,4 +30,31 @@ public class EnrollmentController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
     }
+
+    @DeleteMapping("/delete/{userId}/{finger}")
+    public ResponseEntity<StandardResponse<MqttCommandResponse>> deleteFingerprint(
+            @PathVariable("userId") final Integer userId,
+            @PathVariable("finger") final Integer finger
+    ) {
+        MqttCommandResponse response = enrollmentService.deleteFinger(userId, finger);
+        StandardResponse<MqttCommandResponse> standardResponse = StandardResponse.<MqttCommandResponse>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("Fingerprint deleted successfully")
+                .data(response)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<StandardResponse<MqttCommandResponse>> deleteUser(
+            @PathVariable("userId") final Integer userId
+    ) {
+        MqttCommandResponse response = enrollmentService.deleteUser(userId);
+        StandardResponse<MqttCommandResponse> standardResponse = StandardResponse.<MqttCommandResponse>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("User fingerprints deleted successfully")
+                .data(response)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
+    }
 }
