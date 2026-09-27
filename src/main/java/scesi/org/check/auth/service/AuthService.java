@@ -6,7 +6,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import scesi.org.check.auth.security.JwtUtil;
 import scesi.org.check.core.service.EmailService;
@@ -14,12 +17,14 @@ import scesi.org.check.core.service.TemplateService;
 import scesi.org.check.rol.model.enumerate.RoleEnum;
 import scesi.org.check.user.model.repository.IUserRepository;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
+    private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
     private final IUserRepository iUserRepository;
     private final EmailService emailService;
