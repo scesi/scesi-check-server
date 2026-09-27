@@ -1,6 +1,6 @@
 package scesi.org.check.auth.security;
 
-import jakarta.servlet.FilterChain;
+import jakarta.annotation.Nonnull;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,7 +14,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -24,9 +23,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            jakarta.servlet.http.HttpServletRequest request,
-            jakarta.servlet.http.HttpServletResponse response,
-            jakarta.servlet.FilterChain filterChain
+            @Nonnull HttpServletRequest request,
+            @Nonnull HttpServletResponse response,
+            @Nonnull jakarta.servlet.FilterChain filterChain
     ) throws ServletException, IOException {
         String accessToken = extractTokenFromCookie(request);
 
