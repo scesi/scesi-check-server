@@ -56,4 +56,42 @@ public class FingerprintController {
                 .build();
         return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
     }
+
+    @PostMapping("/wifi")
+    public ResponseEntity<StandardResponse<MqttCommandResponse>> addWifi(
+            @RequestParam("ssid") final String ssid,
+            @RequestParam("pass") final String pass
+    ) {
+        MqttCommandResponse response = enrollmentService.wifiAdd(ssid, pass);
+        StandardResponse<MqttCommandResponse> standardResponse = StandardResponse.<MqttCommandResponse>builder()
+                .statusCode(HttpStatus.CREATED.value())
+                .message("WiFi network added successfully")
+                .data(response)
+                .build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(standardResponse);
+    }
+
+    @DeleteMapping("/wifi/{ssid}")
+    public ResponseEntity<StandardResponse<MqttCommandResponse>> deleteWifi(
+            @PathVariable("ssid") final String ssid
+    ) {
+        MqttCommandResponse response = enrollmentService.wifiDelete(ssid);
+        StandardResponse<MqttCommandResponse> standardResponse = StandardResponse.<MqttCommandResponse>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("WiFi network deleted successfully")
+                .data(response)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
+    }
+
+    @GetMapping("/wifi")
+    public ResponseEntity<StandardResponse<MqttCommandResponse>> listWifi() {
+        MqttCommandResponse response = enrollmentService.wifiList();
+        StandardResponse<MqttCommandResponse> standardResponse = StandardResponse.<MqttCommandResponse>builder()
+                .statusCode(HttpStatus.OK.value())
+                .message("WiFi networks retrieved successfully")
+                .data(response)
+                .build();
+        return ResponseEntity.status(HttpStatus.OK).body(standardResponse);
+    }
 }
