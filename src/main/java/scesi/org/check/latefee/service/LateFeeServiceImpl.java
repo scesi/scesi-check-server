@@ -1,13 +1,16 @@
 package scesi.org.check.latefee.service;
 
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import scesi.org.check.core.service.TemplateService;
 import scesi.org.check.latefee.model.entity.LateFeeEntity;
-import scesi.org.check.latefee.model.entity.ReportGenerationErrorException;
+import scesi.org.check.latefee.model.exception.ReportGenerationErrorException;
 import scesi.org.check.latefee.model.entity.TypeLateFeeEntity;
+import scesi.org.check.latefee.model.event.LateFeePaidEvent;
 import scesi.org.check.latefee.model.exception.LateFeeNotFoundException;
+import scesi.org.check.latefee.model.projection.ILateFeeNotificationProjection;
 import scesi.org.check.latefee.model.projection.ILateFeeProjection;
 import scesi.org.check.latefee.model.projection.ILateFeeReportProjection;
 import scesi.org.check.latefee.model.repository.ILateFeeRepository;
@@ -24,13 +27,16 @@ public class LateFeeServiceImpl implements ILateFeeService {
     private final ILateFeeRepository iLateFeeRepository;
     private final ITypeLateFeeRepository iTypeLateFeeRepository;
     private final TemplateService templateService;
+    private final ApplicationEventPublisher eventPublisher;
 
     public LateFeeServiceImpl(ILateFeeRepository iLateFeeRepository,
                               ITypeLateFeeRepository iTypeLateFeeRepository,
-                              TemplateService templateService) {
+                              TemplateService templateService,
+                              ApplicationEventPublisher eventPublisher) {
         this.iLateFeeRepository = iLateFeeRepository;
         this.iTypeLateFeeRepository = iTypeLateFeeRepository;
         this.templateService = templateService;
+        this.eventPublisher = eventPublisher;
     }
 
 
@@ -46,6 +52,10 @@ public class LateFeeServiceImpl implements ILateFeeService {
         TypeLateFeeEntity typeLateFee = iTypeLateFeeRepository.getReferenceById(1L);
         lateFeeToChange.setTypeLateFeeEntity(typeLateFee);
         iLateFeeRepository.save(lateFeeToChange);
+
+        List<ILateFeeNotificationProjection> notifications = iLateFeeRepository.findNotificationDataByFeeIds(List.of(id));
+        eventPublisher.publishEvent(new LateFeePaidEvent(notifications));
+
         return true;
     }
 
